@@ -8,7 +8,7 @@
 #################################################
 
 EXEC = asmbl
-FILES = asmbl.cpp
+FILES = ./dataTypes/Code.cpp
 CC = /usr/bin/g++
 LFLAGS = -g
 CFLAGS = -Wall -g 

@@ -16,7 +16,7 @@ void OpCode::PopulateTable(){
 	while (file >> name >> std::hex >> hex >> format >> length) {		
 		//printf("these should all be ints %d, %d, %d\n", hex, format, length);
 		//std::cout << typeid(name).name() << std::endl;
-		mOpTable["ADD"] = Code(hex, format, length);
+		mOpTable[name] = Code(hex, format, length);
 	}
 }
 

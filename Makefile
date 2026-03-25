@@ -8,19 +8,21 @@
 #################################################
 
 EXEC = asmbl
-FILES = asmbl.cpp
+FILES := $(shell find . -name "*.cpp")
 CC = /usr/bin/g++
 LFLAGS = -g
-CFLAGS = -Wall -g 
+CFLAGS = -Wall -g -MMD -MP -I./dataTypes -I./unitTest
 
 OBJECTS = $(FILES:.cpp=.o)
+DEPS = $(OBJECTS:.o=.d)
 
 $(EXEC):$(OBJECTS)
 	$(CC) $(LFLAGS) -o $(EXEC) $(OBJECTS)
-	rm -f *.o
 
 %.o:%.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
 
+-include $(DEPS)
+
 clean:
-	rm -f *.o $(EXEC)
+	rm -f *.o $(OBJECTS) $(DEPS) $(EXEC)

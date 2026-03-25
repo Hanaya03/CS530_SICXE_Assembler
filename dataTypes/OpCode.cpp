@@ -7,6 +7,11 @@
 
 std::unordered_map<std::string, Code> OpCode::mOpTable;
 
+/***************************************************************************
+* Did NOT want to hard code the OpCode table in the code so I decided to 
+* make an algorithm to read them from a file and populate the table 
+* automatically. Easier to maintain, imo.
+**************************************************************************/
 void OpCode::PopulateTable(){
 
 	std::ifstream file("data/opcodes.txt");
@@ -14,13 +19,15 @@ void OpCode::PopulateTable(){
 	int hex, format, length;
 
 	while (file >> name >> std::hex >> hex >> format >> length) {		
-		//printf("these should all be ints %d, %d, %d\n", hex, format, length);
-		//std::cout << typeid(name).name() << std::endl;
 		mOpTable[name] = Code(hex, format, length);
 	}
 }
 
-bool OpCode::IsCodeInTable(std::string c){
+/***************************************************************************
+* Basically a getter.
+***************************************************************************/
+bool OpCode::ValidateOperation(std::string c){
+	
 	if(mOpTable.find(c) != mOpTable.end())
 		return true;
 	return false;

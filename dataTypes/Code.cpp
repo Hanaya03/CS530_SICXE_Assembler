@@ -1,17 +1,17 @@
-class Code{
-	private:
-		int mHex;
-		int mFormat;
-		int mLength;
+#include "Code.h"
 
-	public:
-		Code(){
-			mHex = 0x00;
-			mFormat = 0;
-			mLength = 0;
-		}
-
-};
-int main(){
-	return 0;
+Code::Code(){
+	mHex = 0x00;
+	mFormat = 0;
+	mLength = 0;
 }
+
+Code::Code(int h, int f, int l){
+	mHex = h;
+	mFormat = f;
+	mLength = l;
+}
+
+int Code::GetHex(){return mHex;}
+int Code::GetLength(){return mLength;}
+int Code::GetFormat(){return mFormat;}

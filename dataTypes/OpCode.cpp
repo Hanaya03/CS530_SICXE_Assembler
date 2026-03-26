@@ -24,11 +24,18 @@ void OpCode::PopulateTable(){
 }
 
 /***************************************************************************
-* Basically a getter.
+* kinda, sorta, not really a getter 
 ***************************************************************************/
 bool OpCode::ValidateOperation(std::string c){
 	
 	if(mOpTable.find(c) != mOpTable.end())
 		return true;
 	return false;
+}
+
+/*****************************************************************************
+ * actually is a getter
+ *************************************************************************/
+Code* OpCode::GetCode(std::string c){
+	return &mOpTable[c];
 }

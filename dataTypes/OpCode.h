@@ -43,6 +43,8 @@ class OpCode{
 		 *		operation and parser should flag accordingly
 		 ***************************************************************************/
 		static bool ValidateOperation(std::string);
+
+		static Code* GetCode(std::string);
 };
 
 #endif

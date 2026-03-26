@@ -12,5 +12,5 @@ int main(){
 	printf("is ADD in the opcode table? %d\n", OpCode::ValidateOperation("ADD"));
 	printf("is MUL in the opcode table? %d\n", OpCode::ValidateOperation("MUL"));
 	Token newToken(0, 1, "Sample source statement", OpCode::GetCode("Add"), newLabel);
-	//printf("newToken has values %d, %d, %s")
+	printf("newToken has values %d, %d, %s\n", newToken.GetAddress(), newToken.GetErrId(), newToken.GetSrcStmt().c_str());
 }

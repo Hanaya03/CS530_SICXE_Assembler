@@ -15,6 +15,11 @@ class Token{
 	public:
 		Token();
 		Token(int, int, std::string, Code*, Label*);
+		int GetAddress();
+		int GetErrId();
+		std::string GetSrcStmt();
+		Code* GetCodePtr();
+		Label* GetLabelPtr();
 };
 
 #endif

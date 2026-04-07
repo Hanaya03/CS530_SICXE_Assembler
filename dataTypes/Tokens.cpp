@@ -17,6 +17,10 @@ Token::Token(int a, int e, std::string s, EFlag f, Code* c, Label* l){
 	mLabel = l;
 }
 
+int Token::SetAddress(int a){
+	mAddress = a;
+}
+
 int Token::GetAddress(){
 	return mAddress;
 }

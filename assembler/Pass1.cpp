@@ -26,6 +26,7 @@ bool Pass1::ReadFile(std::string filename) {
 
     while (std::getline(inFile, line)) {
         SourceLine s;
+
         s.address = 0;
         s.label = "";
         s.opcode = "";
@@ -63,13 +64,13 @@ bool Pass1::ReadFile(std::string filename) {
         }
 
         s.address = locCtr;
-	t.SetAddress(locCtr);
+	    t.SetAddress(locCtr);
 
         // Handle START first so label gets correct starting address
         if (s.opcode == "START") {
             locCtr = std::stoi(s.operand, nullptr, 16);
             s.address = locCtr;
-		t.SetAddress(locCtr);
+		    t.SetAddress(locCtr);
         }
 
         // Add label to SYMTAB

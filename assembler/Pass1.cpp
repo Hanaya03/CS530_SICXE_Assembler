@@ -1,8 +1,12 @@
 #include "Pass1.h"
-#include <fstream>
-#include <iostream>
-#include <sstream>
-#include "dataTypes/OpCode.h"
+
+Token Pass1::t;
+std::vector<SourceLine> Pass1::mLines;
+std::vector<Token> Pass1::mTokens;
+std::unordered_map<std::string, int> Pass1::mSymTab;
+std::unordered_map<std::string, Label> Pass1::dSymTab;
+Label* Pass1::pLabel;
+Code* Pass1::pCode;
 
 Pass1::Pass1() {
 }
@@ -59,11 +63,13 @@ bool Pass1::ReadFile(std::string filename) {
         }
 
         s.address = locCtr;
+	t.SetAddress(locCtr);
 
         // Handle START first so label gets correct starting address
         if (s.opcode == "START") {
             locCtr = std::stoi(s.operand, nullptr, 16);
             s.address = locCtr;
+		t.SetAddress(locCtr);
         }
 
         // Add label to SYMTAB
@@ -94,14 +100,14 @@ bool Pass1::ReadFile(std::string filename) {
                 locCtr += (s.operand.size() - 3) / 2;
             }
         }
-        else if (s.opcode == "START") {
-            // already handled above
-        }
         else if (OpCode::ValidateOperation(s.opcode)) {
             locCtr += 3;
+		pCode = OpCode::GetCode(second);
         }
 
         mLines.push_back(s);
+	
+        mTokens.push_back(t);
     }
 
     return true;

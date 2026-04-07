@@ -4,6 +4,13 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <fstream>
+#include <iostream>
+#include <sstream>
+#include "OpCode.h"
+#include "Code.h"
+#include "Tokens.h"
+#include "Label.h"
 
 struct SourceLine {
     int address;
@@ -16,13 +23,18 @@ struct SourceLine {
 
 class Pass1 {
 private:
-    std::vector<SourceLine> mLines;
-    std::unordered_map<std::string, int> mSymTab;
+	static std::vector<SourceLine> mLines;
+	static std::vector<Token> mTokens;
+	static std::unordered_map<std::string, int> mSymTab;
+	static std::unordered_map<std::string, Label> dSymTab;
+	static Code* pCode;
+	static Label* pLabel;
+	static Token t;
 
 public:
     Pass1();
 
-    bool ReadFile(std::string filename);
+    static bool ReadFile(std::string filename);
 
     std::vector<SourceLine> GetLines();
 };

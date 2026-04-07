@@ -11,7 +11,7 @@ EXEC = asmbl
 FILES := $(shell find . -name "*.cpp")
 CC = /usr/bin/g++
 LFLAGS = -g
-CFLAGS = -Wall -g -MMD -MP -I./dataTypes -I./unitTest
+CFLAGS = -Wall -g -MMD -MP -I./dataTypes -I./unitTest -I./assembler
 
 OBJECTS = $(FILES:.cpp=.o)
 DEPS = $(OBJECTS:.o=.d)

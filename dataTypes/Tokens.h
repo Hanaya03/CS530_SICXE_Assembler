@@ -22,7 +22,7 @@ enum EFlag{
  *	Code* mCode - A pointer to the Code object for this line's operation mnemonic
  *	Label* mLabel - A pointer to the symbol's Label object from the symtab, if it exists
  *
- *********************************************************************************************************************/
+ *******************************************************************************************************************/
 class Token{
 	private:
 		int mAddress;
@@ -33,12 +33,18 @@ class Token{
 		Label* mLabel;
 	public:
 		Token();
-		Token(int, int, std::string, EFlag, Code*, Label*);
+		Token(int, int, std::string, EFlag, Code*, Label*)
+		void SetAddress(int);
 		int GetAddress();
+		void SetErrId(int);
 		int GetErrId();
+		void SetAddressingMode(EFlag);
 		EFlag GetAddressingMode();
+		void GetSrcStmt(std::string);
 		std::string GetSrcStmt();
+		void SetCodePtr(Code*);
 		Code* GetCodePtr();
+		void SetLabelPtr(Label*);
 		Label* GetLabelPtr();
 };
 

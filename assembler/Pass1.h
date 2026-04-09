@@ -12,6 +12,7 @@
 #include "Code.h"
 #include "Tokens.h"
 #include "Label.h"
+#include <cstdio>
 
 
 struct SourceLine {

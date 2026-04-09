@@ -32,6 +32,7 @@ bool Pass1::ReadFile(std::string filename) {
             s.isComment = true;
 		mTokens.push_back(t);
             mLines.push_back(s);
+		printf("Line is a comment. Skipping.\n %s\n", line.c_str());
             continue;
         }
 
@@ -39,6 +40,7 @@ bool Pass1::ReadFile(std::string filename) {
         if (line.empty()) {
 		mTokens.push_back(t);
             mLines.push_back(s);
+		printf("this line is empty. skipping.\n");
             continue;
         }
 
@@ -51,14 +53,18 @@ bool Pass1::ReadFile(std::string filename) {
             s.label = "";
             s.opcode = first;
             s.operand = second;
+		printf("Objects found for line:\n%s\nLabel: empty, Operation:%s, Operand:%s\n", line.c_str(), s.opcode.c_str(), s.operand.c_str());
         }
         else {
             s.label = first;
             s.opcode = second;
             s.operand = third;
+		printf("Objects found for line:\n%s\nLabel: %s, Operation:%s, Operand:%s\n", line.c_str(), s.label.c_str(), s.opcode.c_str(), s.operand.c_str());
         }
 
+	printf("Parsing operand field.\n");
 	s.opcode = ParseOperation(s.opcode, t);
+	printf("Parsed operand: %s\n", s.opcode.c_str());	
 
         s.address = locCtr;
 
@@ -115,9 +121,9 @@ bool Pass1::ReadFile(std::string filename) {
 std::string Pass1::ParseOperation(const std::string& in, Token t){
 	if (!in.empty() && in[0] == '+') {
        		t.GetFlagBits().SetE(1);
+		return in.substr(1);
     	}
-	
-	return in.substr(1);
+	return in;	
 }
 
 std::string Pass1::ParseOperand(const std::string& in, Token t){
@@ -139,14 +145,14 @@ std::string Pass1::ParseOperand(const std::string& in, Token t){
 		tmp = tmp.substr(0, tmp.size() - 2);
 	}
 
-	if(isNumber(tmp)){
+	if(IsNumber(tmp)){
 		
 	}
         	
 	return tmp;
 }
 
-bool Pass1::isNumber(const std::string& s) {
+bool Pass1::IsNumber(const std::string& s) {
     if (s.empty()) return false;
 
     for (char c : s) {

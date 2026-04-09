@@ -17,7 +17,11 @@ Token::Token(int a, int e, std::string s, EFlag f, Code* c, Label* l){
 	mLabel = l;
 }
 
-int Token::SetAddress(int a){
+Bits Token::GetFlagBits(){
+	return mFlagBits;
+}
+
+void Token::SetAddress(int a){
 	mAddress = a;
 }
 
@@ -31,6 +35,10 @@ int Token::GetErrId(){
 
 EFlag Token::GetAddressingMode(){
 	return mAddrMode;
+}
+
+void Token::SetSrcStmt(std::string s){
+	mSrcStmt = s;
 }
 
 std::string Token::GetSrcStmt(){

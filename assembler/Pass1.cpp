@@ -1,6 +1,5 @@
 #include "Pass1.h"
 
-Token Pass1::t;
 std::vector<SourceLine> Pass1::mLines;
 std::vector<Token> Pass1::mTokens;
 std::unordered_map<std::string, int> Pass1::mSymTab;
@@ -24,25 +23,21 @@ bool Pass1::ReadFile(std::string filename) {
 
     std::string line;
 
+    SourceLine s;
     while (std::getline(inFile, line)) {
-        SourceLine s;
-
-        s.address = 0;
-        s.label = "";
-        s.opcode = "";
-        s.operand = "";
-        s.originalLine = line;
-        s.isComment = false;
+	Token t;
 
         // Check if comment line
         if (line.size() > 0 && line[0] == '.') {
             s.isComment = true;
+		mTokens.push_back(t);
             mLines.push_back(s);
             continue;
         }
 
         // Skip completely blank lines
         if (line.empty()) {
+		mTokens.push_back(t);
             mLines.push_back(s);
             continue;
         }
@@ -63,16 +58,17 @@ bool Pass1::ReadFile(std::string filename) {
             s.operand = third;
         }
 
+	s.opcode = ParseOperation(s.opcode, t);
+
         s.address = locCtr;
-	    t.SetAddress(locCtr);
 
         // Handle START first so label gets correct starting address
         if (s.opcode == "START") {
             locCtr = std::stoi(s.operand, nullptr, 16);
             s.address = locCtr;
-		    t.SetAddress(locCtr);
         }
 
+	t.SetAddress(locCtr);
         // Add label to SYMTAB
         if (!s.label.empty()) {
             if (mSymTab.find(s.label) != mSymTab.end()) {
@@ -103,14 +99,59 @@ bool Pass1::ReadFile(std::string filename) {
         }
         else if (OpCode::ValidateOperation(s.opcode)) {
             locCtr += 3;
-		pCode = OpCode::GetCode(second);
+		pCode = OpCode::GetCode(s.opcode);
         }
+
+	
 
         mLines.push_back(s);
 	
         mTokens.push_back(t);
     }
 
+    return true;
+}
+
+std::string Pass1::ParseOperation(const std::string& in, Token t){
+	if (!in.empty() && in[0] == '+') {
+       		t.GetFlagBits().SetE(1);
+    	}
+	
+	return in.substr(1);
+}
+
+std::string Pass1::ParseOperand(const std::string& in, Token t){
+	std::string tmp = in;
+
+	if (!tmp.empty() && tmp[0] == '@') {
+                t.GetFlagBits().SetN(1); 
+                t.GetFlagBits().SetI(0); 
+		tmp  = tmp.substr(1);
+	}
+	if (!tmp.empty() && tmp[0] == '#') {
+                t.GetFlagBits().SetN(0); 
+                t.GetFlagBits().SetI(1); 
+		tmp  = tmp.substr(1);
+	}
+
+	if (tmp.size() >= 2 && tmp.substr(tmp.size() - 2) == ",X"){
+                t.GetFlagBits().SetX(1); 
+		tmp = tmp.substr(0, tmp.size() - 2);
+	}
+
+	if(isNumber(tmp)){
+		
+	}
+        	
+	return tmp;
+}
+
+bool Pass1::isNumber(const std::string& s) {
+    if (s.empty()) return false;
+
+    for (char c : s) {
+        if (!std::isdigit(c)) return false;
+    }
     return true;
 }
 

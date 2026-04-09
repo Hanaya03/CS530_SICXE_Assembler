@@ -11,6 +11,35 @@ enum EFlag{
 	Immediate
 };
 
+struct Bits{
+	int n;
+	int i;
+	int x;
+	int b;
+	int p;
+	int e;
+
+	Bits(){
+		n = 1;
+		i = 1;
+		x = 0;
+		b = 0;
+		p = 0;
+		e = 0;	
+	}
+	
+	void SetN(int val){ n = val; }
+	void SetI(int val){ i = val; }
+	void SetX(int val){ x = val; }
+	void SetB(int val){ b = val; }
+	void SetP(int val){ p = val; }
+	void SetE(int val){ e = val; }
+};
+
+struct Operand{
+	bool isLabel;
+};
+
 /*******************************************************************************************************************
  * Class used to tokenize the lines of the input .sic file
  * 
@@ -31,16 +60,18 @@ class Token{
 		EFlag mAddrMode;
 		Code* mCode;
 		Label* mLabel;
+		Bits mFlagBits;
 	public:
 		Token();
-		Token(int, int, std::string, EFlag, Code*, Label*)
+		Token(int, int, std::string, EFlag, Code*, Label*);
+		Bits GetFlagBits();
 		void SetAddress(int);
 		int GetAddress();
 		void SetErrId(int);
 		int GetErrId();
 		void SetAddressingMode(EFlag);
 		EFlag GetAddressingMode();
-		void GetSrcStmt(std::string);
+		void SetSrcStmt(std::string);
 		std::string GetSrcStmt();
 		void SetCodePtr(Code*);
 		Code* GetCodePtr();

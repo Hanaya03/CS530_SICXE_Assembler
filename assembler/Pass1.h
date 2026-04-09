@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <cctype>
 #include <unordered_map>
 #include <fstream>
 #include <iostream>
@@ -11,6 +12,7 @@
 #include "Code.h"
 #include "Tokens.h"
 #include "Label.h"
+
 
 struct SourceLine {
     int address;
@@ -29,8 +31,10 @@ private:
 	static std::unordered_map<std::string, Label> dSymTab;
 	static Code* pCode;
 	static Label* pLabel;
-	static Token t;
-
+	
+	static std::string ParseOperation(const std::string&, Token t);
+	static std::string ParseOperand(const std::string&, Token t);
+	static bool IsNumber(const std::string&);
 public:
     Pass1();
 

@@ -62,9 +62,9 @@ bool Pass1::ReadFile(std::string filename) {
 		printf("Objects found for line:\n%s\nLabel: %s, Operation:%s, Operand:%s\n", line.c_str(), s.label.c_str(), s.opcode.c_str(), s.operand.c_str());
         }
 
-	printf("Parsing operand field.\n");
+	printf("Parsing operation field.\n");
 	s.opcode = ParseOperation(s.opcode, t);
-	printf("Parsed operand: %s\n", s.opcode.c_str());	
+	printf("Parsed operation: %s\n", s.opcode.c_str());	
 
         s.address = locCtr;
 
@@ -81,9 +81,18 @@ bool Pass1::ReadFile(std::string filename) {
                 std::cerr << "Error: Duplicate label " << s.label << std::endl;
             }
             else {
+		dSymTab[s.label] = Label(s.address, 'R');
                 mSymTab[s.label] = s.address;
             }
         }
+
+	printf("Parsing operand field\n");
+	s.operand = ParseOperand(s.operand, t);
+	if(t.GetOperand().pLabel != NULL){
+		printf("Operand is a label with value %d\n", t.GetOperand().pLabel->GetAddress());
+	}else{
+		printf("Operand is a value: %d\n", t.GetOperand().Value);
+	}
 
         // Update LOCCTR for directives and instructions
         if (s.opcode == "WORD") {
@@ -105,10 +114,10 @@ bool Pass1::ReadFile(std::string filename) {
         }
         else if (OpCode::ValidateOperation(s.opcode)) {
             locCtr += 3;
-		pCode = OpCode::GetCode(s.opcode);
+		t.SetCodePtr(OpCode::GetCode(s.opcode));
         }
 
-	
+	printf("\n");
 
         mLines.push_back(s);
 	
@@ -146,7 +155,9 @@ std::string Pass1::ParseOperand(const std::string& in, Token t){
 	}
 
 	if(IsNumber(tmp)){
-		
+		t.GetOperand().SetValue(std::stoi(tmp, nullptr, 16));	
+	}else{
+		t.GetOperand().SetLabelPtr(&dSymTab[tmp]);
 	}
         	
 	return tmp;

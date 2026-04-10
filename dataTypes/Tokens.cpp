@@ -45,10 +45,18 @@ std::string Token::GetSrcStmt(){
 	return mSrcStmt;
 }
 
+void Token::SetCodePtr(Code* c){
+	mCode = c;
+}
+
 Code* Token::GetCodePtr(){
 	return mCode;
 }
 
 Label* Token::GetLabelPtr(){
 	return mLabel;
+}
+
+Operand Token::GetOperand(){
+	return mOperand;
 }

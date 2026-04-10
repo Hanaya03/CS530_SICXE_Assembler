@@ -8,6 +8,8 @@ class Label{
 	public:
 		Label();
 		Label(int, char);
+	
+		int GetAddress();
 };
 
 #endif

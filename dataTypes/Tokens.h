@@ -38,6 +38,16 @@ struct Bits{
 
 struct Operand{
 	bool isLabel;
+	Label* pLabel = NULL;
+	int Value = 0;
+
+	void SetValue(int v){
+		Value = v;
+	}
+
+	void SetLabelPtr(Label* l){
+		pLabel = l;	
+	}
 };
 
 /*******************************************************************************************************************
@@ -61,6 +71,7 @@ class Token{
 		Code* mCode;
 		Label* mLabel;
 		Bits mFlagBits;
+		Operand mOperand;
 	public:
 		Token();
 		Token(int, int, std::string, EFlag, Code*, Label*);
@@ -77,6 +88,7 @@ class Token{
 		Code* GetCodePtr();
 		void SetLabelPtr(Label*);
 		Label* GetLabelPtr();
+		Operand GetOperand();
 };
 
 #endif

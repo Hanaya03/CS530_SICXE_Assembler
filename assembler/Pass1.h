@@ -14,31 +14,61 @@
 #include "Label.h"
 #include <cstdio>
 
+struct Bits{
+        int n, i, x, b, p, e;
+
+        Bits(){
+                n = 1;
+                i = 1;
+                x = 0;
+                b = 0;
+                p = 0;
+                e = 0;
+        }
+
+        void SetN(int val){ n = val; }
+        void SetI(int val){ i = val; }
+        void SetX(int val){ x = val; }
+        void SetB(int val){ b = val; }
+        void SetP(int val){ p = val; }
+        void SetE(int val){ e = val; }
+};
+
+struct Operand{
+        bool isLabel = false;
+	bool isLiteral = false;
+        std::string mLabel = "";
+        int mValue = 0;
+
+        void SetValue(int v){
+                mValue = v;
+        }
+
+        void SetLabel(std::string l){
+                mLabel = l;
+        }
+};
 
 struct SourceLine {
-    int address;
+    int address = 0;
+	Bits mBits;
     std::string label;
     std::string opcode;
-    std::string operand;
+	Code* pCode;
+    Operand mOperand;
     std::string originalLine;
-    bool isComment;
+    bool isComment = false;
 };
 
 class Pass1 {
 private:
 	static std::vector<SourceLine> mLines;
-	static std::vector<Token> mTokens;
 	static std::unordered_map<std::string, int> mSymTab;
-	static std::unordered_map<std::string, Label> dSymTab;
-	static Code* pCode;
-	static Label* pLabel;
 	
-	static std::string ParseOperation(const std::string&, Token t);
-	static std::string ParseOperand(const std::string&, Token t);
+	static void ParseOperation(SourceLine*);
+	static void ParseOperand(SourceLine*);
 	static bool IsNumber(const std::string&);
 public:
-    Pass1();
-
     static bool ReadFile(std::string filename);
 
     std::vector<SourceLine> GetLines();

@@ -5,51 +5,6 @@
 #include "Error.h"
 #include "Label.h"
 
-enum EFlag{
-	Simple,
-	Indirect,
-	Immediate
-};
-
-struct Bits{
-	int n;
-	int i;
-	int x;
-	int b;
-	int p;
-	int e;
-
-	Bits(){
-		n = 1;
-		i = 1;
-		x = 0;
-		b = 0;
-		p = 0;
-		e = 0;	
-	}
-	
-	void SetN(int val){ n = val; }
-	void SetI(int val){ i = val; }
-	void SetX(int val){ x = val; }
-	void SetB(int val){ b = val; }
-	void SetP(int val){ p = val; }
-	void SetE(int val){ e = val; }
-};
-
-struct Operand{
-	bool isLabel;
-	Label* pLabel = NULL;
-	int Value = 0;
-
-	void SetValue(int v){
-		Value = v;
-	}
-
-	void SetLabelPtr(Label* l){
-		pLabel = l;	
-	}
-};
-
 /*******************************************************************************************************************
  * Class used to tokenize the lines of the input .sic file
  * 
@@ -67,28 +22,21 @@ class Token{
 		int mAddress;
 		int mErrId;
 		std::string mSrcStmt;
-		EFlag mAddrMode;
 		Code* mCode;
 		Label* mLabel;
-		Bits mFlagBits;
-		Operand mOperand;
 	public:
 		Token();
-		Token(int, int, std::string, EFlag, Code*, Label*);
-		Bits GetFlagBits();
+		Token(int, int, std::string, Code*, Label*);
 		void SetAddress(int);
 		int GetAddress();
 		void SetErrId(int);
 		int GetErrId();
-		void SetAddressingMode(EFlag);
-		EFlag GetAddressingMode();
 		void SetSrcStmt(std::string);
 		std::string GetSrcStmt();
 		void SetCodePtr(Code*);
 		Code* GetCodePtr();
 		void SetLabelPtr(Label*);
 		Label* GetLabelPtr();
-		Operand GetOperand();
 };
 
 #endif

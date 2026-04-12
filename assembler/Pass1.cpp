@@ -1,14 +1,7 @@
 #include "Pass1.h"
 
 std::vector<SourceLine> Pass1::mLines;
-std::vector<Token> Pass1::mTokens;
 std::unordered_map<std::string, int> Pass1::mSymTab;
-std::unordered_map<std::string, Label> Pass1::dSymTab;
-Label* Pass1::pLabel;
-Code* Pass1::pCode;
-
-Pass1::Pass1() {
-}
 
 bool Pass1::ReadFile(std::string filename) {
     std::ifstream inFile(filename);
@@ -23,22 +16,25 @@ bool Pass1::ReadFile(std::string filename) {
 
     std::string line;
 
-    SourceLine s;
     while (std::getline(inFile, line)) {
 	Token t;
+    SourceLine s;
 
         // Check if comment line
         if (line.size() > 0 && line[0] == '.') {
             s.isComment = true;
-		mTokens.push_back(t);
             mLines.push_back(s);
 		printf("Line is a comment. Skipping.\n %s\n", line.c_str());
+            continue;
+        }
+        if (line.size() > 0 && line[0] == '*') {
+            mLines.push_back(s);
+		printf("IDK what this star is suppose to represent but I know we don't need to worry about it.\n %s\n", line.c_str());
             continue;
         }
 
         // Skip completely blank lines
         if (line.empty()) {
-		mTokens.push_back(t);
             mLines.push_back(s);
 		printf("this line is empty. skipping.\n");
             continue;
@@ -52,27 +48,35 @@ bool Pass1::ReadFile(std::string filename) {
         if (line.size() > 0 && (line[0] == ' ' || line[0] == '\t')) {
             s.label = "";
             s.opcode = first;
-            s.operand = second;
-		printf("Objects found for line:\n%s\nLabel: empty, Operation:%s, Operand:%s\n", line.c_str(), s.opcode.c_str(), s.operand.c_str());
+            s.mOperand.mLabel = second;
+		printf("Objects found for line:\n%s\nLabel: empty, Operation:%s, Operand:%s\n", line.c_str(), s.opcode.c_str(), s.mOperand.mLabel.c_str());
         }
         else {
             s.label = first;
             s.opcode = second;
-            s.operand = third;
-		printf("Objects found for line:\n%s\nLabel: %s, Operation:%s, Operand:%s\n", line.c_str(), s.label.c_str(), s.opcode.c_str(), s.operand.c_str());
+            s.mOperand.mLabel = third;
+		printf("Objects found for line:\n%s\nLabel: %s, Operation:%s, Operand:%s\n", line.c_str(), s.label.c_str(), s.opcode.c_str(), s.mOperand.mLabel.c_str());
         }
 
 	printf("Parsing operation field.\n");
-	s.opcode = ParseOperation(s.opcode, t);
+	ParseOperation(&s);
 	printf("Parsed operation: %s\n", s.opcode.c_str());	
 
         s.address = locCtr;
 
         // Handle START first so label gets correct starting address
         if (s.opcode == "START") {
-            locCtr = std::stoi(s.operand, nullptr, 16);
+            locCtr = std::stoi(s.mOperand.mLabel, nullptr, 16);
             s.address = locCtr;
-        }
+        }else{
+		printf("Parsing operand field\n");
+		ParseOperand(&s);
+		if(s.mOperand.isLabel){
+			printf("Operand is a label: %s\n", s.mOperand.mLabel.c_str());
+		}else{
+			printf("Operand is a value: %d\n", s.mOperand.mValue);
+		}
+	}
 
 	t.SetAddress(locCtr);
         // Add label to SYMTAB
@@ -81,86 +85,78 @@ bool Pass1::ReadFile(std::string filename) {
                 std::cerr << "Error: Duplicate label " << s.label << std::endl;
             }
             else {
-		dSymTab[s.label] = Label(s.address, 'R');
-                mSymTab[s.label] = s.address;
+		mSymTab[s.label] = locCtr;
             }
         }
 
-	printf("Parsing operand field\n");
-	s.operand = ParseOperand(s.operand, t);
-	if(t.GetOperand().pLabel != NULL){
-		printf("Operand is a label with value %d\n", t.GetOperand().pLabel->GetAddress());
-	}else{
-		printf("Operand is a value: %d\n", t.GetOperand().Value);
-	}
 
         // Update LOCCTR for directives and instructions
         if (s.opcode == "WORD") {
             locCtr += 3;
         }
         else if (s.opcode == "RESW") {
-            locCtr += 3 * std::stoi(s.operand);
+            locCtr += s.mOperand.mValue;
         }
         else if (s.opcode == "RESB") {
-            locCtr += std::stoi(s.operand);
+            locCtr += s.mOperand.mValue;
         }
         else if (s.opcode == "BYTE") {
-            if (s.operand.size() >= 3 && s.operand[0] == 'C' && s.operand[1] == '\'') {
-                locCtr += s.operand.size() - 3;
+            if (s.mOperand.mLabel.size() >= 3 && s.mOperand.mLabel[0] == 'C' && s.mOperand.mLabel[1] == '\'') {
+                locCtr += s.mOperand.mLabel.size() - 3;
             }
-            else if (s.operand.size() >= 3 && s.operand[0] == 'X' && s.operand[1] == '\'') {
-                locCtr += (s.operand.size() - 3) / 2;
+            else if (s.mOperand.mLabel.size() >= 3 && s.mOperand.mLabel[0] == 'X' && s.mOperand.mLabel[1] == '\'') {
+                locCtr += (s.mOperand.mLabel.size() - 3) / 2;
             }
         }
         else if (OpCode::ValidateOperation(s.opcode)) {
             locCtr += 3;
-		t.SetCodePtr(OpCode::GetCode(s.opcode));
+		s.pCode = OpCode::GetCode(s.opcode);
         }
 
 	printf("\n");
 
         mLines.push_back(s);
-	
-        mTokens.push_back(t);
     }
 
     return true;
 }
 
-std::string Pass1::ParseOperation(const std::string& in, Token t){
-	if (!in.empty() && in[0] == '+') {
-       		t.GetFlagBits().SetE(1);
-		return in.substr(1);
-    	}
-	return in;	
+void Pass1::ParseOperation(SourceLine* s){
+	if (!s->opcode.empty() && s->opcode[0] == '+') {
+        	s->mBits.e = 1;
+        	s->opcode = s->opcode.substr(1);
+	}
 }
 
-std::string Pass1::ParseOperand(const std::string& in, Token t){
-	std::string tmp = in;
+void Pass1::ParseOperand(SourceLine* s) {
+    std::string& label = s->mOperand.mLabel; 
 
-	if (!tmp.empty() && tmp[0] == '@') {
-                t.GetFlagBits().SetN(1); 
-                t.GetFlagBits().SetI(0); 
-		tmp  = tmp.substr(1);
-	}
-	if (!tmp.empty() && tmp[0] == '#') {
-                t.GetFlagBits().SetN(0); 
-                t.GetFlagBits().SetI(1); 
-		tmp  = tmp.substr(1);
-	}
+    if (!label.empty() && label[0] == '@') {
+        s->mBits.n = 1;
+        s->mBits.i = 0;
+        label = label.substr(1);
+    }
+    if (!label.empty() && label[0] == '#') {
+        s->mBits.n = 0;
+        s->mBits.i = 1;
+        label = label.substr(1);
+    }
+    if (!label.empty() && label[0] == '=') {
+        s->mBits.n = 0;
+        s->mBits.i = 1;
+	s->mOperand.isLiteral = true;
+	return;
+    }
+    if (label.size() >= 2 && label.substr(label.size() - 2) == ",X") {
+        s->mBits.x = 1;
+        label = label.substr(0, label.size() - 2); 
+    }
 
-	if (tmp.size() >= 2 && tmp.substr(tmp.size() - 2) == ",X"){
-                t.GetFlagBits().SetX(1); 
-		tmp = tmp.substr(0, tmp.size() - 2);
-	}
-
-	if(IsNumber(tmp)){
-		t.GetOperand().SetValue(std::stoi(tmp, nullptr, 16));	
-	}else{
-		t.GetOperand().SetLabelPtr(&dSymTab[tmp]);
-	}
-        	
-	return tmp;
+    if (IsNumber(label)) {
+        s->mOperand.mValue = std::stoi(label, nullptr, 16);
+    } else {
+        s->mOperand.isLabel = true;
+    }
 }
 
 bool Pass1::IsNumber(const std::string& s) {

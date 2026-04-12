@@ -8,17 +8,12 @@ Token::Token(){
 	mLabel = NULL;
 }
 
-Token::Token(int a, int e, std::string s, EFlag f, Code* c, Label* l){
+Token::Token(int a, int e, std::string s, Code* c, Label* l){
 	mAddress = a;
 	mErrId = e;
 	mSrcStmt = s;
-	mAddrMode = f;
 	mCode = c;
 	mLabel = l;
-}
-
-Bits Token::GetFlagBits(){
-	return mFlagBits;
 }
 
 void Token::SetAddress(int a){
@@ -31,10 +26,6 @@ int Token::GetAddress(){
 
 int Token::GetErrId(){
 	return mErrId;
-}
-
-EFlag Token::GetAddressingMode(){
-	return mAddrMode;
 }
 
 void Token::SetSrcStmt(std::string s){
@@ -55,8 +46,4 @@ Code* Token::GetCodePtr(){
 
 Label* Token::GetLabelPtr(){
 	return mLabel;
-}
-
-Operand Token::GetOperand(){
-	return mOperand;
 }

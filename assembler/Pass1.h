@@ -1,0 +1,77 @@
+#ifndef PASS1_H
+#define PASS1_H
+
+#include <string>
+#include <vector>
+#include <cctype>
+#include <unordered_map>
+#include <fstream>
+#include <iostream>
+#include <sstream>
+#include "OpCode.h"
+#include "Code.h"
+#include "Tokens.h"
+#include "Label.h"
+#include <cstdio>
+
+struct Bits{
+        int n, i, x, b, p, e;
+
+        Bits(){
+                n = 1;
+                i = 1;
+                x = 0;
+                b = 0;
+                p = 0;
+                e = 0;
+        }
+
+        void SetN(int val){ n = val; }
+        void SetI(int val){ i = val; }
+        void SetX(int val){ x = val; }
+        void SetB(int val){ b = val; }
+        void SetP(int val){ p = val; }
+        void SetE(int val){ e = val; }
+};
+
+struct Operand{
+        bool isLabel = false;
+	bool isLiteral = false;
+        std::string mLabel = "";
+        int mValue = 0;
+
+        void SetValue(int v){
+                mValue = v;
+        }
+
+        void SetLabel(std::string l){
+                mLabel = l;
+        }
+};
+
+struct SourceLine {
+    int address = 0;
+	Bits mBits;
+    std::string label;
+    std::string opcode;
+	Code* pCode;
+    Operand mOperand;
+    std::string originalLine;
+    bool isComment = false;
+};
+
+class Pass1 {
+private:
+	static std::vector<SourceLine> mLines;
+	static std::unordered_map<std::string, int> mSymTab;
+	
+	static void ParseOperation(SourceLine*);
+	static void ParseOperand(SourceLine*);
+	static bool IsNumber(const std::string&);
+public:
+    static bool ReadFile(std::string filename);
+
+    std::vector<SourceLine> GetLines();
+};
+
+#endif

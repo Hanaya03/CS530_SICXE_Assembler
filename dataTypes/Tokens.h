@@ -5,12 +5,6 @@
 #include "Error.h"
 #include "Label.h"
 
-enum EFlag{
-	Simple,
-	Indirect,
-	Immediate
-};
-
 /*******************************************************************************************************************
  * Class used to tokenize the lines of the input .sic file
  * 
@@ -22,23 +16,26 @@ enum EFlag{
  *	Code* mCode - A pointer to the Code object for this line's operation mnemonic
  *	Label* mLabel - A pointer to the symbol's Label object from the symtab, if it exists
  *
- *********************************************************************************************************************/
+ *******************************************************************************************************************/
 class Token{
 	private:
 		int mAddress;
 		int mErrId;
 		std::string mSrcStmt;
-		EFlag mAddrMode;
 		Code* mCode;
 		Label* mLabel;
 	public:
 		Token();
-		Token(int, int, std::string, EFlag, Code*, Label*);
+		Token(int, int, std::string, Code*, Label*);
+		void SetAddress(int);
 		int GetAddress();
+		void SetErrId(int);
 		int GetErrId();
-		EFlag GetAddressingMode();
+		void SetSrcStmt(std::string);
 		std::string GetSrcStmt();
+		void SetCodePtr(Code*);
 		Code* GetCodePtr();
+		void SetLabelPtr(Label*);
 		Label* GetLabelPtr();
 };
 

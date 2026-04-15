@@ -10,7 +10,7 @@
 EXEC = asmbl
 FILES := $(shell find . -name "*.cpp")
 CC = /usr/bin/g++
-LFLAGS = -g
+LFLAGS = -g -no-pie
 CFLAGS = -Wall -g -MMD -MP -I./dataTypes -I./unitTest -I./assembler
 
 OBJECTS = $(FILES:.cpp=.o)

@@ -72,6 +72,8 @@ public:
     static bool ReadFile(std::string filename);
 
     std::vector<SourceLine> GetLines();
+    static std::vector<SourceLine> GetAllLines() { return mLines; }
+    static std::unordered_map<std::string, int> GetSymTab() { return mSymTab; }
 };
 
 #endif

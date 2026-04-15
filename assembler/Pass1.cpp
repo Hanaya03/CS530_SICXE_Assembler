@@ -95,7 +95,7 @@ bool Pass1::ReadFile(std::string filename) {
             locCtr += 3;
         }
         else if (s.opcode == "RESW") {
-            locCtr += s.mOperand.mValue;
+            locCtr += s.mOperand.mValue * 3; // words are 3 bytes each
         }
         else if (s.opcode == "RESB") {
             locCtr += s.mOperand.mValue;
@@ -109,7 +109,7 @@ bool Pass1::ReadFile(std::string filename) {
             }
         }
         else if (OpCode::ValidateOperation(s.opcode)) {
-            locCtr += 3;
+            locCtr += (s.mBits.e == 1) ? 4 : 3;   // format 4 = 4 bytes, format 3 = 3 bytes
 		s.pCode = OpCode::GetCode(s.opcode);
         }
 

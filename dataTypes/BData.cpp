@@ -20,18 +20,3 @@ int BlockData::GetLength(){return length;}
 
 void BlockData::SetBlockNumber(int n){blockNumber = n;}
 int BlockData::GetBlockNumber(){return blockNumber;}
-
-void BlockData::InsertLabel(const std::string& s){
-    if (mSymTab.find(s) != mSymTab.end()) {
-        throw std::runtime_error("Duplicate label: " + s);
-    }
-    mSymTab[s] = locCtr;
-}
-
-int BlockData::GetLabelVal(const std::string& s){
-    auto it = mSymTab.find(s);
-    if (it == mSymTab.end()) {
-        throw std::runtime_error("Undefined label: " + s);
-    }
-    return it->second;
-}

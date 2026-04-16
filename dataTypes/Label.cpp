@@ -10,6 +10,12 @@ Label::Label(int a, char f){
 	mFlag = f;
 }
 
+Label::Label(int a, char f, int n){
+	mAddress = a;
+	mFlag = f;
+	mBlock = n;
+}
+
 int Label::GetAddress(){
 	return mAddress;
 }

@@ -12,7 +12,6 @@ class BlockData{
         int length;
         int blockNumber;
 
-        std::unordered_map<std::string, int> mSymTab;
     public:
         BlockData();
 
@@ -28,8 +27,5 @@ class BlockData{
 
         void SetBlockNumber(int n);
         int GetBlockNumber();
-
-        void InsertLabel(const std::string& s);
-        int GetLabelVal(const std::string& s);
 };
 #endif

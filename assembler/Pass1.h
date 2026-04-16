@@ -66,6 +66,7 @@ class Pass1 {
 private:
 	static std::vector<SourceLine> mLines;
 	static std::unordered_map<std::string, int> mSymTab;
+	static std::unordered_map<std::string, Label> dSymTab;
 	
 	static void ParseOperation(SourceLine*);
 	static void ParseOperand(SourceLine*);

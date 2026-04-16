@@ -2,6 +2,7 @@
 
 std::vector<SourceLine> Pass1::mLines;
 std::unordered_map<std::string, int> Pass1::mSymTab;
+std::unordered_map<std::string, Label> Pass1::dSymTab;
 
 bool Pass1::ReadFile(std::string filename) {
     std::ifstream inFile(filename);
@@ -132,6 +133,8 @@ bool Pass1::ReadFile(std::string filename) {
 
         mLines.push_back(s);
     }
+
+    PBlocks::FinalizeBlocks();
 
     return true;
 }

@@ -13,6 +13,8 @@
 #include "Pass1.h"
 #include "OpCode.h"
 #include "Code.h"
+#include "PBlocks.h"
+#include "BData.h"
 
 struct LiteralEntry {
     std::string name;       // content between quotes, e.g. "EOF"

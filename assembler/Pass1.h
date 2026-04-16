@@ -12,6 +12,8 @@
 #include "Code.h"
 #include "Tokens.h"
 #include "Label.h"
+#include "PBlocks.h"
+#include "BData.h"
 #include <cstdio>
 
 struct Bits{

@@ -19,7 +19,6 @@ bool Pass1::ReadFile(std::string filename) {
     while (std::getline(inFile, line)) {
         // strip Windows CRLF if present
         if (!line.empty() && line.back() == '\r') line.pop_back();
-        Token t;
         SourceLine s;
 
         // Check if comment line
@@ -65,15 +64,20 @@ bool Pass1::ReadFile(std::string filename) {
 	ParseOperation(&s);
 	printf("Parsed operation: %s\n", s.opcode.c_str());	
 
-        s.address = locCtr;
 
         // Handle START first so label gets correct starting address
         if (s.opcode == "START") {
             locCtr = std::stoi(s.mOperand.mLabel, nullptr, 16);
-            s.address = locCtr;
+            // PBlocks::InsertBlockData(s.label);
+            PBlocks::SetCurrentBlock("(default)", std::stoi(s.mOperand.mLabel, nullptr, 16));
+            
+            s.address = PBlocks::GetDataPtr()->GetCtr();
         }else{
-		printf("Parsing operand field\n");
-		ParseOperand(&s);
+            printf("Parsing operand field\n");
+
+        s.address = PBlocks::GetDataPtr()->GetCtr();
+		
+        ParseOperand(&s);
 		if(s.mOperand.isLabel){
 			printf("Operand is a label: %s\n", s.mOperand.mLabel.c_str());
 		}else{
@@ -81,39 +85,47 @@ bool Pass1::ReadFile(std::string filename) {
 		}
 	}
 
-	t.SetAddress(locCtr);
         // Add label to SYMTAB
         if (!s.label.empty()) {
+            PBlocks::GetDataPtr()->InsertLabel(s.label);
             if (mSymTab.find(s.label) != mSymTab.end()) {
                 std::cerr << "Error: Duplicate label " << s.label << std::endl;
             }
             else {
-		mSymTab[s.label] = locCtr;
+                mSymTab[s.label] = locCtr;
             }
         }
 
 
         // Update LOCCTR for directives and instructions
-        if (s.opcode == "WORD") {
+        if (s.opcode == "USE") {
+            PBlocks::SetCurrentBlock(s.label);
+        }else if (s.opcode == "WORD") {
+            PBlocks::GetDataPtr()->IncrementCtr(3);
             locCtr += 3;
         }
         else if (s.opcode == "RESW") {
+            PBlocks::GetDataPtr()->IncrementCtr(s.mOperand.mValue * 3);
             locCtr += s.mOperand.mValue * 3; // words are 3 bytes each
         }
         else if (s.opcode == "RESB") {
+            PBlocks::GetDataPtr()->IncrementCtr(s.mOperand.mValue);
             locCtr += s.mOperand.mValue;
         }
         else if (s.opcode == "BYTE") {
             if (s.mOperand.mLabel.size() >= 3 && s.mOperand.mLabel[0] == 'C' && s.mOperand.mLabel[1] == '\'') {
+            PBlocks::GetDataPtr()->IncrementCtr(s.mOperand.mLabel.size() - 3);
                 locCtr += s.mOperand.mLabel.size() - 3;
             }
             else if (s.mOperand.mLabel.size() >= 3 && s.mOperand.mLabel[0] == 'X' && s.mOperand.mLabel[1] == '\'') {
+            PBlocks::GetDataPtr()->IncrementCtr((s.mOperand.mLabel.size() - 3) / 2);
                 locCtr += (s.mOperand.mLabel.size() - 3) / 2;
             }
         }
         else if (OpCode::ValidateOperation(s.opcode)) {
+            PBlocks::GetDataPtr()->IncrementCtr((s.mBits.e == 1) ? 4 : 3);
             locCtr += (s.mBits.e == 1) ? 4 : 3;   // format 4 = 4 bytes, format 3 = 3 bytes
-		s.pCode = OpCode::GetCode(s.opcode);
+            s.pCode = OpCode::GetCode(s.opcode);
         }
 
 	printf("\n");

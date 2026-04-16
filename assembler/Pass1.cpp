@@ -17,14 +17,17 @@ bool Pass1::ReadFile(std::string filename) {
     std::string line;
 
     while (std::getline(inFile, line)) {
-	Token t;
-    SourceLine s;
+        // strip Windows CRLF if present
+        if (!line.empty() && line.back() == '\r') line.pop_back();
+        Token t;
+        SourceLine s;
 
         // Check if comment line
         if (line.size() > 0 && line[0] == '.') {
             s.isComment = true;
+            s.originalLine = line;
             mLines.push_back(s);
-		printf("Line is a comment. Skipping.\n %s\n", line.c_str());
+            printf("Line is a comment. Skipping.\n %s\n", line.c_str());
             continue;
         }
         if (line.size() > 0 && line[0] == '*') {
@@ -142,10 +145,11 @@ void Pass1::ParseOperand(SourceLine* s) {
         label = label.substr(1);
     }
     if (!label.empty() && label[0] == '=') {
-        s->mBits.n = 0;
+        // literal: simple addressing - the operand is the address of the literal
+        s->mBits.n = 1;
         s->mBits.i = 1;
-	s->mOperand.isLiteral = true;
-	return;
+        s->mOperand.isLiteral = true;
+        return;
     }
     if (label.size() >= 2 && label.substr(label.size() - 2) == ",X") {
         s->mBits.x = 1;
@@ -153,7 +157,7 @@ void Pass1::ParseOperand(SourceLine* s) {
     }
 
     if (IsNumber(label)) {
-        s->mOperand.mValue = std::stoi(label, nullptr, 16);
+        s->mOperand.mValue = std::stoi(label, nullptr, 10); // operands are decimal
     } else {
         s->mOperand.isLabel = true;
     }

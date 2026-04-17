@@ -44,7 +44,7 @@ static int litLen(const std::string& raw) { //length in bytes of the literal
     return (raw.size() > 1 && raw[1] == 'C') ? (int)c.size() : (int)c.size() / 2;
 }
  
-// Literal pool: collect unique literals, assign addresses after last line
+// Literal pool: collect unique literals, assign addresses after last line or LTORG directive
  
 void Pass2::CollectLiterals(const std::vector<SourceLine>& lines) {
     mLiteralTable.clear();
@@ -87,7 +87,7 @@ static int resolve(const SourceLine& s, const std::unordered_map<std::string,int
     }
     if (s.mOperand.isLabel) {
         auto it = sym.find(s.mOperand.mLabel);
-        if (it != sym.end()) return it->second;
+        if (it != sym.end()) return it->second + PBlocks::GetBlock(s.mBlock)->GetLength();
     }
     return s.mOperand.mValue;
 }
@@ -133,7 +133,7 @@ static std::string encodeInstr(const SourceLine& s,
             int pcDisp = target - (s.address + 3);
             if (pcDisp >= -2048 && pcDisp <= 2047) { p = 1; disp = pcDisp & 0xFFF; }
             else if (baseReg >= 0)                 { b = 1; disp = target - baseReg; }
-            else std::cerr << "Error: can't reach operand at " << toHex(s.address, 4) << "\n";
+            else{std::cerr << "Error:" << toHex(s.address, 4) << ": can't reach operand " << s.mOperand.mLabel << "\n" << "PC relative displacement: " << pcDisp<< "\n";}
         }
     }
     int b1 = (op & 0xFC) | (n << 1) | i;
@@ -187,6 +187,8 @@ bool Pass2::GenerateOutput(const std::string& sourceFile) {
         }
  
         if (s.opcode == "NOBASE") { mBaseReg = -1; lst << addr << "\t\t" << s.opcode << "\n"; continue; }
+
+        if (s.opcode == "LTORG") { mBaseReg = -1; lst << addr << "\t\t" << s.opcode << "\n"; continue; }
  
         if (s.opcode == "RESW" || s.opcode == "RESB") {
             lst << addr << "\t" << s.label << "\t" << s.opcode << "\t" << s.mOperand.mValue << "\n";

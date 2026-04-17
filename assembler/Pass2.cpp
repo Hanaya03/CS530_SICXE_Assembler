@@ -44,7 +44,7 @@ static int litLen(const std::string& raw) { //length in bytes of the literal
     return (raw.size() > 1 && raw[1] == 'C') ? (int)c.size() : (int)c.size() / 2;
 }
  
-// Literal pool: collect unique literals, assign addresses after last line
+// Literal pool: collect unique literals, assign addresses after last line or LTORG directive
  
 void Pass2::CollectLiterals(const std::vector<SourceLine>& lines) {
     mLiteralTable.clear();
@@ -190,6 +190,8 @@ bool Pass2::GenerateOutput(const std::string& sourceFile) {
         }
  
         if (s.opcode == "NOBASE") { mBaseReg = -1; lst << addr << "\t\t" << s.opcode << "\n"; continue; }
+
+        if (s.opcode == "LTORG") { mBaseReg = -1; lst << addr << "\t\t" << s.opcode << "\n"; continue; }
  
         if (s.opcode == "RESW" || s.opcode == "RESB") {
             lst << addr << "\t" << s.label << "\t" << s.opcode << "\t" << s.mOperand.mValue << "\n";

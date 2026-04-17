@@ -13,6 +13,7 @@
 #include "Pass1.h"
 #include "OpCode.h"
 #include "Code.h"
+#include "BData.h"
 #include "PBlocks.h"
 #include "BData.h"
 
@@ -21,6 +22,7 @@ struct LiteralEntry {
     std::string operandHex; // hex-encoded bytes, e.g. "454F46"
     int address;
     int length;
+    int block;
 };
 
 class Pass2 {

@@ -88,7 +88,6 @@ bool Pass1::ReadFile(std::string filename) {
 
         // Add label to SYMTAB
         if (!s.label.empty()) {
-            PBlocks::GetDataPtr()->InsertLabel(s.label);
             if (mSymTab.find(s.label) != mSymTab.end()) {
                 std::cerr << "Error: Duplicate label " << s.label << std::endl;
             }
@@ -101,6 +100,7 @@ bool Pass1::ReadFile(std::string filename) {
         // Update LOCCTR for directives and instructions
         if (s.opcode == "USE") {
             PBlocks::SetCurrentBlock(s.label);
+            s.address = PBlocks::GetDataPtr()->GetCtr();
         }else if (s.opcode == "WORD") {
             PBlocks::GetDataPtr()->IncrementCtr(3);
             locCtr += 3;
@@ -129,7 +129,9 @@ bool Pass1::ReadFile(std::string filename) {
             s.pCode = OpCode::GetCode(s.opcode);
         }
 
-	printf("\n");
+        s.mBlock = PBlocks::GetDataPtr()->GetBlockNumber();
+
+        printf("\n");
 
         mLines.push_back(s);
     }

@@ -98,7 +98,7 @@ static std::string encodeInstr(const SourceLine& s,
                                 const std::unordered_map<std::string,int>& sym,
                                 const std::vector<LiteralEntry>& lits,
                                 int baseReg) {
-    Code* code = OpCode::GetCode(s.opcode);
+    Code* code = s.pCode;
     int op  = code->GetHex();
     int fmt = code->GetFormat();
  
@@ -216,7 +216,7 @@ bool Pass2::GenerateOutput(const std::string& sourceFile) {
         if (s.mBits.x) opDisplay += ",X";
  
         std::string prefix = s.mBits.e ? "+" : "";
-        lst << addr << "\t" << s.label << "\t" << prefix << s.opcode << "\t" << opDisplay << "\t" << obj << "\n";
+        lst << addr << "\t" << s.label << "\t" << prefix << s.opcode << "\t" << opDisplay << "\t" << obj << "\t" << s.mBlock << "\n";
     }
  
     // Symbol table

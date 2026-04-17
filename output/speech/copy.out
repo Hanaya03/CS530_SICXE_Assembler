@@ -1,0 +1,420 @@
+Input file: examples/copy.sic
+Objects found for line:
+COPY    START   0
+Label: COPY, Operation:START, Operand:0
+Parsing operation field.
+Parsed operation: START
+
+Objects found for line:
+FIRST   STL     RETADR
+Label: FIRST, Operation:STL, Operand:RETADR
+Parsing operation field.
+Parsed operation: STL
+Parsing operand field
+Operand is a label: RETADR
+
+Objects found for line:
+CLOOP   JSUB    RDREC
+Label: CLOOP, Operation:JSUB, Operand:RDREC
+Parsing operation field.
+Parsed operation: JSUB
+Parsing operand field
+Operand is a label: RDREC
+
+Objects found for line:
+        LDA     LENGTH
+Label: empty, Operation:LDA, Operand:LENGTH
+Parsing operation field.
+Parsed operation: LDA
+Parsing operand field
+Operand is a label: LENGTH
+
+Objects found for line:
+        COMP    #0
+Label: empty, Operation:COMP, Operand:#0
+Parsing operation field.
+Parsed operation: COMP
+Parsing operand field
+Operand is a value: 0
+
+Objects found for line:
+        JEQ     ENDFIL
+Label: empty, Operation:JEQ, Operand:ENDFIL
+Parsing operation field.
+Parsed operation: JEQ
+Parsing operand field
+Operand is a label: ENDFIL
+
+Objects found for line:
+        JSUB    WRREC
+Label: empty, Operation:JSUB, Operand:WRREC
+Parsing operation field.
+Parsed operation: JSUB
+Parsing operand field
+Operand is a label: WRREC
+
+Objects found for line:
+        J       CLOOP
+Label: empty, Operation:J, Operand:CLOOP
+Parsing operation field.
+Parsed operation: J
+Parsing operand field
+Operand is a label: CLOOP
+
+Objects found for line:
+ENDFIL  LDA     =C'EOF'
+Label: ENDFIL, Operation:LDA, Operand:=C'EOF'
+Parsing operation field.
+Parsed operation: LDA
+Parsing operand field
+Operand is a value: 0
+
+Objects found for line:
+        STA     BUFFER
+Label: empty, Operation:STA, Operand:BUFFER
+Parsing operation field.
+Parsed operation: STA
+Parsing operand field
+Operand is a label: BUFFER
+
+Objects found for line:
+        LDA     #3
+Label: empty, Operation:LDA, Operand:#3
+Parsing operation field.
+Parsed operation: LDA
+Parsing operand field
+Operand is a value: 3
+
+Objects found for line:
+        STA     LENGTH
+Label: empty, Operation:STA, Operand:LENGTH
+Parsing operation field.
+Parsed operation: STA
+Parsing operand field
+Operand is a label: LENGTH
+
+Objects found for line:
+        JSUB    WRREC
+Label: empty, Operation:JSUB, Operand:WRREC
+Parsing operation field.
+Parsed operation: JSUB
+Parsing operand field
+Operand is a label: WRREC
+
+Objects found for line:
+        J       @RETADR
+Label: empty, Operation:J, Operand:@RETADR
+Parsing operation field.
+Parsed operation: J
+Parsing operand field
+Operand is a label: RETADR
+
+Objects found for line:
+	USE	CDATA
+Label: empty, Operation:USE, Operand:CDATA
+Parsing operation field.
+Parsed operation: USE
+Parsing operand field
+Operand is a label: CDATA
+
+Objects found for line:
+RETADR  RESW    1 
+Label: RETADR, Operation:RESW, Operand:1
+Parsing operation field.
+Parsed operation: RESW
+Parsing operand field
+Operand is a value: 1
+
+Objects found for line:
+LENGTH  RESW    1
+Label: LENGTH, Operation:RESW, Operand:1
+Parsing operation field.
+Parsed operation: RESW
+Parsing operand field
+Operand is a value: 1
+
+Objects found for line:
+	USE	CBLKS
+Label: empty, Operation:USE, Operand:CBLKS
+Parsing operation field.
+Parsed operation: USE
+Parsing operand field
+Operand is a label: CBLKS
+
+Objects found for line:
+BUFFER  RESB    4096
+Label: BUFFER, Operation:RESB, Operand:4096
+Parsing operation field.
+Parsed operation: RESB
+Parsing operand field
+Operand is a value: 4096
+
+Objects found for line:
+BUFEND  EQU     *
+Label: BUFEND, Operation:EQU, Operand:*
+Parsing operation field.
+Parsed operation: EQU
+Parsing operand field
+Operand is a label: *
+
+Objects found for line:
+MAXLEN  EQU     BUFEND-BUFFER
+Label: MAXLEN, Operation:EQU, Operand:BUFEND-BUFFER
+Parsing operation field.
+Parsed operation: EQU
+Parsing operand field
+Operand is a label: BUFEND-BUFFER
+
+Line is a comment. Skipping.
+ .
+Line is a comment. Skipping.
+ .       SUBROUTINE TO READ RECORD INTO BUFFER
+Line is a comment. Skipping.
+ .
+Objects found for line:
+	USE
+Label: empty, Operation:USE, Operand:
+Parsing operation field.
+Parsed operation: USE
+Parsing operand field
+Operand is a label: 
+
+Objects found for line:
+RDREC   CLEAR   X 
+Label: RDREC, Operation:CLEAR, Operand:X
+Parsing operation field.
+Parsed operation: CLEAR
+Parsing operand field
+Operand is a label: X
+
+Objects found for line:
+        CLEAR   A
+Label: empty, Operation:CLEAR, Operand:A
+Parsing operation field.
+Parsed operation: CLEAR
+Parsing operand field
+Operand is a label: A
+
+Objects found for line:
+        CLEAR   S
+Label: empty, Operation:CLEAR, Operand:S
+Parsing operation field.
+Parsed operation: CLEAR
+Parsing operand field
+Operand is a label: S
+
+Objects found for line:
+        +LDT    #MAXLEN
+Label: empty, Operation:+LDT, Operand:#MAXLEN
+Parsing operation field.
+Parsed operation: LDT
+Parsing operand field
+Operand is a label: MAXLEN
+
+Objects found for line:
+RLOOP   TD      INPUT
+Label: RLOOP, Operation:TD, Operand:INPUT
+Parsing operation field.
+Parsed operation: TD
+Parsing operand field
+Operand is a label: INPUT
+
+Objects found for line:
+        JEQ     RLOOP
+Label: empty, Operation:JEQ, Operand:RLOOP
+Parsing operation field.
+Parsed operation: JEQ
+Parsing operand field
+Operand is a label: RLOOP
+
+Objects found for line:
+        RD      INPUT
+Label: empty, Operation:RD, Operand:INPUT
+Parsing operation field.
+Parsed operation: RD
+Parsing operand field
+Operand is a label: INPUT
+
+Objects found for line:
+        COMPR   A,S
+Label: empty, Operation:COMPR, Operand:A,S
+Parsing operation field.
+Parsed operation: COMPR
+Parsing operand field
+Operand is a label: A,S
+
+Objects found for line:
+        JEQ     EXIT
+Label: empty, Operation:JEQ, Operand:EXIT
+Parsing operation field.
+Parsed operation: JEQ
+Parsing operand field
+Operand is a label: EXIT
+
+Objects found for line:
+        STCH    BUFFER,X
+Label: empty, Operation:STCH, Operand:BUFFER,X
+Parsing operation field.
+Parsed operation: STCH
+Parsing operand field
+Operand is a label: BUFFER
+
+Objects found for line:
+        TIXR    T
+Label: empty, Operation:TIXR, Operand:T
+Parsing operation field.
+Parsed operation: TIXR
+Parsing operand field
+Operand is a label: T
+
+Objects found for line:
+        JLT     RLOOP
+Label: empty, Operation:JLT, Operand:RLOOP
+Parsing operation field.
+Parsed operation: JLT
+Parsing operand field
+Operand is a label: RLOOP
+
+Objects found for line:
+EXIT    STX     LENGTH 
+Label: EXIT, Operation:STX, Operand:LENGTH
+Parsing operation field.
+Parsed operation: STX
+Parsing operand field
+Operand is a label: LENGTH
+
+Objects found for line:
+        RSUB 
+Label: empty, Operation:RSUB, Operand:
+Parsing operation field.
+Parsed operation: RSUB
+Parsing operand field
+Operand is a label: 
+
+Objects found for line:
+	USE	CDATA
+Label: empty, Operation:USE, Operand:CDATA
+Parsing operation field.
+Parsed operation: USE
+Parsing operand field
+Operand is a label: CDATA
+
+Objects found for line:
+INPUT   BYTE    X'F1' 
+Label: INPUT, Operation:BYTE, Operand:X'F1'
+Parsing operation field.
+Parsed operation: BYTE
+Parsing operand field
+Operand is a label: X'F1'
+
+Line is a comment. Skipping.
+ .
+Line is a comment. Skipping.
+ .       SUBROUTINE TO WRITE RECORD FROM BUFFER
+Line is a comment. Skipping.
+ .
+Objects found for line:
+	USE
+Label: empty, Operation:USE, Operand:
+Parsing operation field.
+Parsed operation: USE
+Parsing operand field
+Operand is a label: 
+
+Objects found for line:
+WRREC   CLEAR   X
+Label: WRREC, Operation:CLEAR, Operand:X
+Parsing operation field.
+Parsed operation: CLEAR
+Parsing operand field
+Operand is a label: X
+
+Objects found for line:
+        LDT     LENGTH
+Label: empty, Operation:LDT, Operand:LENGTH
+Parsing operation field.
+Parsed operation: LDT
+Parsing operand field
+Operand is a label: LENGTH
+
+Objects found for line:
+WLOOP   TD      =X'05'
+Label: WLOOP, Operation:TD, Operand:=X'05'
+Parsing operation field.
+Parsed operation: TD
+Parsing operand field
+Operand is a value: 0
+
+Objects found for line:
+        JEQ     WLOOP
+Label: empty, Operation:JEQ, Operand:WLOOP
+Parsing operation field.
+Parsed operation: JEQ
+Parsing operand field
+Operand is a label: WLOOP
+
+Objects found for line:
+        LDCH    BUFFER,X
+Label: empty, Operation:LDCH, Operand:BUFFER,X
+Parsing operation field.
+Parsed operation: LDCH
+Parsing operand field
+Operand is a label: BUFFER
+
+Objects found for line:
+        WD      =X'05'
+Label: empty, Operation:WD, Operand:=X'05'
+Parsing operation field.
+Parsed operation: WD
+Parsing operand field
+Operand is a value: 0
+
+Objects found for line:
+        TIXR    T
+Label: empty, Operation:TIXR, Operand:T
+Parsing operation field.
+Parsed operation: TIXR
+Parsing operand field
+Operand is a label: T
+
+Objects found for line:
+        JLT     WLOOP
+Label: empty, Operation:JLT, Operand:WLOOP
+Parsing operation field.
+Parsed operation: JLT
+Parsing operand field
+Operand is a label: WLOOP
+
+Objects found for line:
+        RSUB
+Label: empty, Operation:RSUB, Operand:
+Parsing operation field.
+Parsed operation: RSUB
+Parsing operand field
+Operand is a label: 
+
+Objects found for line:
+	USE CDATA
+Label: empty, Operation:USE, Operand:CDATA
+Parsing operation field.
+Parsed operation: USE
+Parsing operand field
+Operand is a label: CDATA
+
+Objects found for line:
+	LTORG
+Label: empty, Operation:LTORG, Operand:
+Parsing operation field.
+Parsed operation: LTORG
+Parsing operand field
+Operand is a label: 
+
+Objects found for line:
+        END     FIRST
+Label: empty, Operation:END, Operand:FIRST
+Parsing operation field.
+Parsed operation: END
+Parsing operand field
+Operand is a label: FIRST
+
+Pass 2 complete: output/copy.l / output/copy.st

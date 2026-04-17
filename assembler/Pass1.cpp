@@ -92,7 +92,7 @@ bool Pass1::ReadFile(std::string filename) {
                 std::cerr << "Error: Duplicate label " << s.label << std::endl;
             }
             else {
-                mSymTab[s.label] = locCtr;
+                mSymTab[s.label] = PBlocks::GetDataPtr()->GetCtr();
             }
         }
 

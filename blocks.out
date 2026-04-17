@@ -1,0 +1,188 @@
+Input file: examples/blocks.sic
+Line is a comment. Skipping.
+ .  SOURCE CODE FOR THE XE VERSION OF THE SIC FAMILY OF COMPUTER
+Objects found for line:
+SUM       START   0                      SAMPLE PROGRAM
+Label: SUM, Operation:START, Operand:0
+Parsing operation field.
+Parsed operation: START
+
+Objects found for line:
+FIRST     LDX    #0          
+Label: FIRST, Operation:LDX, Operand:#0
+Parsing operation field.
+Parsed operation: LDX
+Parsing operand field
+Operand is a value: 0
+
+Objects found for line:
+          LDA    #0          
+Label: empty, Operation:LDA, Operand:#0
+Parsing operation field.
+Parsed operation: LDA
+Parsing operand field
+Operand is a value: 0
+
+Objects found for line:
+         +LDB    #TABLE2     
+Label: empty, Operation:+LDB, Operand:#TABLE2
+Parsing operation field.
+Parsed operation: LDB
+Parsing operand field
+Operand is a label: TABLE2
+
+Objects found for line:
+          BASE    TABLE2
+Label: empty, Operation:BASE, Operand:TABLE2
+Parsing operation field.
+Parsed operation: BASE
+Parsing operand field
+Operand is a label: TABLE2
+
+Objects found for line:
+LOOP      ADD     TABLE,X    
+Label: LOOP, Operation:ADD, Operand:TABLE,X
+Parsing operation field.
+Parsed operation: ADD
+Parsing operand field
+Operand is a label: TABLE
+
+Objects found for line:
+	USE	NEWBLOCK
+Label: empty, Operation:USE, Operand:NEWBLOCK
+Parsing operation field.
+Parsed operation: USE
+Parsing operand field
+Operand is a label: NEWBLOCK
+
+Objects found for line:
+	ADD	TABLE2
+Label: empty, Operation:ADD, Operand:TABLE2
+Parsing operation field.
+Parsed operation: ADD
+Parsing operand field
+Operand is a label: TABLE2
+
+Objects found for line:
+	ADD	TABLE2
+Label: empty, Operation:ADD, Operand:TABLE2
+Parsing operation field.
+Parsed operation: ADD
+Parsing operand field
+Operand is a label: TABLE2
+
+Objects found for line:
+	SUB	TABLE2
+Label: empty, Operation:SUB, Operand:TABLE2
+Parsing operation field.
+Parsed operation: SUB
+Parsing operand field
+Operand is a label: TABLE2
+
+Objects found for line:
+	SUB	TABLE2
+Label: empty, Operation:SUB, Operand:TABLE2
+Parsing operation field.
+Parsed operation: SUB
+Parsing operand field
+Operand is a label: TABLE2
+
+Objects found for line:
+	USE
+Label: empty, Operation:USE, Operand:
+Parsing operation field.
+Parsed operation: USE
+Parsing operand field
+Operand is a label: 
+
+Objects found for line:
+          ADD     TABLE2,X   
+Label: empty, Operation:ADD, Operand:TABLE2,X
+Parsing operation field.
+Parsed operation: ADD
+Parsing operand field
+Operand is a label: TABLE2
+
+Objects found for line:
+          TIX     COUNT      
+Label: empty, Operation:TIX, Operand:COUNT
+Parsing operation field.
+Parsed operation: TIX
+Parsing operand field
+Operand is a label: COUNT
+
+Objects found for line:
+          JLT     LOOP       
+Label: empty, Operation:JLT, Operand:LOOP
+Parsing operation field.
+Parsed operation: JLT
+Parsing operand field
+Operand is a label: LOOP
+
+Objects found for line:
+         +STA     TOTAL      
+Label: empty, Operation:+STA, Operand:TOTAL
+Parsing operation field.
+Parsed operation: STA
+Parsing operand field
+Operand is a label: TOTAL
+
+Objects found for line:
+          RSUB               
+Label: empty, Operation:RSUB, Operand:
+Parsing operation field.
+Parsed operation: RSUB
+Parsing operand field
+Operand is a label: 
+
+Objects found for line:
+MYLIT    +LDA    =C'EOF'
+Label: MYLIT, Operation:+LDA, Operand:=C'EOF'
+Parsing operation field.
+Parsed operation: LDA
+Parsing operand field
+Operand is a value: 0
+
+Objects found for line:
+COUNT     RESW    1
+Label: COUNT, Operation:RESW, Operand:1
+Parsing operation field.
+Parsed operation: RESW
+Parsing operand field
+Operand is a value: 1
+
+Objects found for line:
+TABLE     RESW    2000
+Label: TABLE, Operation:RESW, Operand:2000
+Parsing operation field.
+Parsed operation: RESW
+Parsing operand field
+Operand is a value: 2000
+
+Objects found for line:
+TABLE2    RESW    2000
+Label: TABLE2, Operation:RESW, Operand:2000
+Parsing operation field.
+Parsed operation: RESW
+Parsing operand field
+Operand is a value: 2000
+
+Objects found for line:
+TOTAL     RESW    1
+Label: TOTAL, Operation:RESW, Operand:1
+Parsing operation field.
+Parsed operation: RESW
+Parsing operand field
+Operand is a value: 1
+
+IDK what this star is suppose to represent but I know we don't need to worry about it.
+ *        =C'EOF'
+Objects found for line:
+          END     FIRST
+Label: empty, Operation:END, Operand:FIRST
+Parsing operation field.
+Parsed operation: END
+Parsing operand field
+Operand is a label: FIRST
+
+Pass 2 complete: output/blocks.l / output/blocks.st

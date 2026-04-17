@@ -14,6 +14,10 @@ void PBlocks::InsertBlockData(const std::string s){
     mBlockOrder.push_back(s);
 }
 
+BlockData* PBlocks::GetBlock(int n){
+	return &mBlocks[mBlockOrder[n]];
+}
+
 void PBlocks::SetCurrentBlock(const std::string& s){
     auto it = mBlocks.find(s);
     if (it == mBlocks.end()) {

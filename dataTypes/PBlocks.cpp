@@ -17,7 +17,7 @@ void PBlocks::InsertBlockData(const std::string s){
 void PBlocks::SetCurrentBlock(const std::string& s){
     auto it = mBlocks.find(s);
     if (it == mBlocks.end()) {
-        mBlocks[s] = BlockData();
+        mBlocks[s] = BlockData(mBlockOrder.size());
         mBlockOrder.push_back(s);
         pCurrBlock = &mBlocks[s];
         pCurrBlock->SetCtr(0);

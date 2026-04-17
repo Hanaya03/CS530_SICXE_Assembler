@@ -99,6 +99,7 @@ bool Pass1::ReadFile(std::string filename) {
 
         // Update LOCCTR for directives and instructions
         if (s.opcode == "USE") {
+            if(s.label.empty()) s.label = "(defualt)";
             PBlocks::SetCurrentBlock(s.label);
             s.address = PBlocks::GetDataPtr()->GetCtr();
         }else if (s.opcode == "WORD") {

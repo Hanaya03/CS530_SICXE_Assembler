@@ -14,6 +14,7 @@ class BlockData{
 
     public:
         BlockData();
+        BlockData(int n);
 
         void IncrementCtr(int x);
         void SetCtr(int x);

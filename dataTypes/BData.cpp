@@ -8,6 +8,13 @@ BlockData::BlockData(){
     blockNumber = 0;
 }
 
+BlockData::BlockData(int n){
+    locCtr = 0;
+    startAddr = 0;
+    length = 0;
+    blockNumber = n;
+}
+
 void BlockData::IncrementCtr(int x){ locCtr += x;}
 void BlockData::SetCtr(int x){ locCtr = x;}
 int BlockData::GetCtr(){return locCtr;}

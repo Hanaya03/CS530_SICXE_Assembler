@@ -2,7 +2,8 @@
 
 std::vector<SourceLine> Pass1::mLines;
 std::unordered_map<std::string, int> Pass1::mSymTab;
-std::unordered_map<std::string, Label> Pass1::dSymTab;
+std::unordered_map<std::string, LiteralEntry> Pass1::mLitTab;
+std::vector<LiteralEntry> Pass1::mLitVec;
 
 bool Pass1::ReadFile(std::string filename) {
     std::ifstream inFile(filename);
@@ -79,6 +80,7 @@ bool Pass1::ReadFile(std::string filename) {
         s.address = PBlocks::GetDataPtr()->GetCtr();
 		
         ParseOperand(&s);
+
 		if(s.mOperand.isLabel){
 			printf("Operand is a label: %s\n", s.mOperand.mLabel.c_str());
 		}else{
@@ -98,7 +100,18 @@ bool Pass1::ReadFile(std::string filename) {
 
 
         // Update LOCCTR for directives and instructions
-        if (s.opcode == "USE") {
+        if (s.opcode == "END" || s.opcode == "LTORG") {
+            // emit literal pool
+            for (auto& lit : mLitVec){
+                if(!lit.assigned)
+                {
+                    lit.address = PBlocks::GetDataPtr()->GetCtr();
+                    PBlocks::GetDataPtr()->IncrementCtr(lit.length);
+                }
+                
+            }
+        }
+        else if (s.opcode == "USE") {
             if(s.mOperand.mLabel.empty()){      PBlocks::SetCurrentBlock("(default)");}
             else{                               PBlocks::SetCurrentBlock(s.mOperand.mLabel);}
             
@@ -169,6 +182,14 @@ void Pass1::ParseOperand(SourceLine* s) {
         s->mBits.n = 1;
         s->mBits.i = 1;
         s->mOperand.isLiteral = true;
+
+        std::string name = Pass2::litContent(s->mOperand.mLabel);
+        bool dup = false;
+        for (auto& e : mLitVec) if (e.name == name) { dup = true; break; }
+        LiteralEntry e { false, name, Pass2::litToHex(s->mOperand.mLabel), PBlocks::GetDataPtr()->GetCtr(), Pass2::litLen(s->mOperand.mLabel) };
+        PBlocks::GetDataPtr()->IncrementCtr(e.length);
+        mLitTab[name] = e;
+        mLitVec.push_back(e);
         return;
     }
     if (label.size() >= 2 && label.substr(label.size() - 2) == ",X") {
@@ -182,6 +203,9 @@ void Pass1::ParseOperand(SourceLine* s) {
         s->mOperand.isLabel = true;
     }
 }
+
+std::vector<LiteralEntry> Pass1::GetLitTab(){return mLitVec;}
+
 
 bool Pass1::IsNumber(const std::string& s) {
     if (s.empty()) return false;

@@ -14,6 +14,7 @@
 #include "Label.h"
 #include "PBlocks.h"
 #include "BData.h"
+#include "Pass2.h"
 #include <cstdio>
 
 struct Bits{
@@ -68,7 +69,8 @@ class Pass1 {
 private:
 	static std::vector<SourceLine> mLines;
 	static std::unordered_map<std::string, int> mSymTab;
-	static std::unordered_map<std::string, Label> dSymTab;
+	static std::unordered_map<std::string, LiteralEntry> Pass1::mLitTab;
+        static std::vector<LiteralEntry> Pass1::mLitVec;
 	
 	static void ParseOperation(SourceLine*);
 	static void ParseOperand(SourceLine*);
@@ -76,6 +78,7 @@ private:
 public:
     static bool ReadFile(std::string filename);
 
+    static std::vector<LiteralEntry> GetLitTab();
     std::vector<SourceLine> GetLines();
     static std::vector<SourceLine> GetAllLines() { return mLines; }
     static std::unordered_map<std::string, int> GetSymTab() { return mSymTab; }

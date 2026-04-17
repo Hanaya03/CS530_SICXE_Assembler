@@ -21,14 +21,14 @@ static int regNum(const std::string& r) {
 }
  
 // extract content between single quotes: "=C'EOF'" -> "EOF"
-static std::string litContent(const std::string& raw) {
+std::string Pass2::litContent(const std::string& raw) {
     size_t a = raw.find('\''), b = raw.rfind('\'');
     return (a != std::string::npos && b != a) ? raw.substr(a+1, b-a-1) : "";
 }
  
 // convert literal to hex bytes: =C'EOF' -> "454F46", =X'05' -> "05"
-static std::string litToHex(const std::string& raw) {
-    std::string content = litContent(raw);
+std::string Pass2::litToHex(const std::string& raw) {
+    std::string content = Pass2::litContent(raw);
     std::ostringstream ss;
     if (raw.size() > 1 && raw[1] == 'C') {
         for (char c : content)
@@ -39,50 +39,50 @@ static std::string litToHex(const std::string& raw) {
     return ss.str();
 }
  
-static int litLen(const std::string& raw) { //length in bytes of the literal
-    std::string c = litContent(raw);
+int Pass2::litLen(const std::string& raw) { //length in bytes of the literal
+    std::string c = Pass2::litContent(raw);
     return (raw.size() > 1 && raw[1] == 'C') ? (int)c.size() : (int)c.size() / 2;
 }
  
 // Literal pool: collect unique literals, assign addresses after last line or LTORG directive
  
-void Pass2::CollectLiterals(const std::vector<SourceLine>& lines) {
-    mLiteralTable.clear();
-    int poolAddr = 0;
+// void Pass2::CollectLiterals(const std::vector<SourceLine>& lines) {
+//     mLiteralTable.clear();
+//     int poolAddr = 0;
  
-    for (auto& s : lines) {
-        if (s.isComment || s.opcode.empty() || s.opcode == "END") {
-            if (s.opcode == "END") break;
-            continue;
-        }
-        // track the address
-        if      (s.opcode == "RESW") poolAddr = s.address + s.mOperand.mValue * 3;
-        else if (s.opcode == "RESB") poolAddr = s.address + s.mOperand.mValue;
-        else if (s.opcode == "WORD") poolAddr = s.address + 3;
-        else if (s.opcode == "BYTE") poolAddr = s.address + litLen(s.mOperand.mLabel);
-        else if (s.mBits.e)          poolAddr = s.address + 4;
-        else if (OpCode::ValidateOperation(s.opcode)) poolAddr = s.address + 3;
-    }
+//     for (auto& s : lines) {
+//         if (s.isComment || s.opcode.empty() || s.opcode == "END") {
+//             if (s.opcode == "END") break;
+//             continue;
+//         }
+//         // track the address
+//         if      (s.opcode == "RESW") poolAddr = s.address + s.mOperand.mValue * 3;
+//         else if (s.opcode == "RESB") poolAddr = s.address + s.mOperand.mValue;
+//         else if (s.opcode == "WORD") poolAddr = s.address + 3;
+//         else if (s.opcode == "BYTE") poolAddr = s.address + litLen(s.mOperand.mLabel);
+//         else if (s.mBits.e)          poolAddr = s.address + 4;
+//         else if (OpCode::ValidateOperation(s.opcode)) poolAddr = s.address + 3;
+//     }
  
-    for (auto& s : lines) {
-        if (!s.mOperand.isLiteral) continue;
-        std::string name = litContent(s.mOperand.mLabel);
-        bool dup = false;
-        for (auto& e : mLiteralTable) if (e.name == name) { dup = true; break; }
-        if (dup) continue;
-        LiteralEntry e { name, litToHex(s.mOperand.mLabel), poolAddr, litLen(s.mOperand.mLabel) };
-        poolAddr += e.length;
-        mLiteralTable.push_back(e);
-    }
-    mProgEnd = poolAddr;
-}
+//     for (auto& s : lines) {
+//         if (!s.mOperand.isLiteral) continue;
+//         std::string name = litContent(s.mOperand.mLabel);
+//         bool dup = false;
+//         for (auto& e : mLiteralTable) if (e.name == name) { dup = true; break; }
+//         if (dup) continue;
+//         LiteralEntry e { name, litToHex(s.mOperand.mLabel), poolAddr, litLen(s.mOperand.mLabel) };
+//         poolAddr += e.length;
+//         mLiteralTable.push_back(e);
+//     }
+//     mProgEnd = poolAddr;
+// }
  
 // Resolve target address (symbol or literal)
  
 static int resolve(const SourceLine& s, const std::unordered_map<std::string,int>& sym,
                    const std::vector<LiteralEntry>& lits) {
     if (s.mOperand.isLiteral) {
-        std::string name = litContent(s.mOperand.mLabel);
+        std::string name = Pass2::litContent(s.mOperand.mLabel);
         for (auto& l : lits) if (l.name == name) return l.address;
     }
     if (s.mOperand.isLabel) {
@@ -158,7 +158,8 @@ bool Pass2::GenerateOutput(const std::string& sourceFile) {
  
     auto lines  = Pass1::GetAllLines();
     auto symTab = Pass1::GetSymTab();
-    CollectLiterals(lines);
+    // CollectLiterals(lines);
+    mLiteralTable = Pass1::GetLitTab();
     mBaseReg = -1;
  
     for (auto& s : lines) {
@@ -174,7 +175,7 @@ bool Pass2::GenerateOutput(const std::string& sourceFile) {
             continue;
         }
  
-        if (s.opcode == "END") {
+        if (s.opcode == "END" || s.opcode == "LTORG") {
             // emit literal pool
             for (auto& lit : mLiteralTable)
                 lst << toHex(lit.address,4) << "\t*\t=C'" << lit.name << "'\t\t" << lit.operandHex << "\n";
@@ -190,8 +191,6 @@ bool Pass2::GenerateOutput(const std::string& sourceFile) {
         }
  
         if (s.opcode == "NOBASE") { mBaseReg = -1; lst << addr << "\t\t" << s.opcode << "\n"; continue; }
-
-        if (s.opcode == "LTORG") { mBaseReg = -1; lst << addr << "\t\t" << s.opcode << "\n"; continue; }
  
         if (s.opcode == "RESW" || s.opcode == "RESB") {
             lst << addr << "\t" << s.label << "\t" << s.opcode << "\t" << s.mOperand.mValue << "\n";

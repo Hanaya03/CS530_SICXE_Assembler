@@ -18,11 +18,13 @@
 #include "BData.h"
 
 struct LiteralEntry {
+    bool assigned;
     std::string name;       // content between quotes, e.g. "EOF"
     std::string operandHex; // hex-encoded bytes, e.g. "454F46"
     int address;
     int length;
     int block;
+    
 };
 
 class Pass2 {
@@ -36,6 +38,9 @@ private:
     static void CollectLiterals(const std::vector<SourceLine>& lines);
 
 public:
+    static std::string litToHex(const std::string& raw);
+    static int litLen(const std::string& raw);
+    static std::string litContent(const std::string& raw);
     static bool GenerateOutput(const std::string& sourceFile);
 };
 

@@ -52,14 +52,16 @@ struct Operand{
 };
 
 struct SourceLine {
-    int address = 0;
-	Bits mBits;
-    std::string label;
-    std::string opcode;
-	Code* pCode;
-    Operand mOperand;
-    std::string originalLine;
-    bool isComment = false;
+        int address = 0;
+        int mBlock;
+        Bits mBits;
+        std::string label;
+        std::string opcode;
+        Code* pCode;
+        Operand mOperand;
+        std::string originalLine;
+        
+        bool isComment = false;
 };
 
 class Pass1 {

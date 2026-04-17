@@ -99,9 +99,11 @@ bool Pass1::ReadFile(std::string filename) {
 
         // Update LOCCTR for directives and instructions
         if (s.opcode == "USE") {
-            if(s.mOperand.mLabel.empty()) s.mOperand.mLabel = "(default)";
-            PBlocks::SetCurrentBlock(s.mOperand.mLabel);
+            if(s.mOperand.mLabel.empty()){      PBlocks::SetCurrentBlock("(default)");}
+            else{                               PBlocks::SetCurrentBlock(s.mOperand.mLabel);}
+            
             s.address = PBlocks::GetDataPtr()->GetCtr();
+            
         }else if (s.opcode == "WORD") {
             PBlocks::GetDataPtr()->IncrementCtr(3);
             locCtr += 3;

@@ -14,7 +14,7 @@ EXIT		00004C
 WRREC		000052
 WLOOP		000058
 BUFEND		001000
-MAXLEN		001000
+MAXLEN		001003
 
 Literal		Hex		Address		Length
 ----------------------------------------------

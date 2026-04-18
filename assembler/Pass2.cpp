@@ -174,7 +174,7 @@ bool Pass2::GenerateOutput(const std::string& sourceFile) {
         
 	if (s.opcode.empty()) continue;
  
-        std::string addr = toHex(s.address + PBlocks::GetBlock(s.mBlock)->GetStartAddr(), 4);
+        std::string addr = toHex(s.address, 4);
         std::string obj  = "";
  
         if (s.opcode == "START") {

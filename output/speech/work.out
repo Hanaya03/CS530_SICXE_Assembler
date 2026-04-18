@@ -1,4 +1,4 @@
-Input file: examples/copy.sic
+Input file: examples/work.sic
 Objects found for line:
 COPY    START   0
 Label: COPY, Operation:START, Operand:0
@@ -151,20 +151,20 @@ Parsing operand field
 Operand is a value: 4096
 
 Objects found for line:
-BUFEND  EQU     *
-Label: BUFEND, Operation:EQU, Operand:*
+BUFEND  STA     #3
+Label: BUFEND, Operation:STA, Operand:#3
 Parsing operation field.
-Parsed operation: EQU
+Parsed operation: STA
 Parsing operand field
-Operand is a label: *
+Operand is a value: 3
 
 Objects found for line:
-MAXLEN  EQU     BUFEND-BUFFER
-Label: MAXLEN, Operation:EQU, Operand:BUFEND-BUFFER
+MAXLEN  STA     BUFFER
+Label: MAXLEN, Operation:STA, Operand:BUFFER
 Parsing operation field.
-Parsed operation: EQU
+Parsed operation: STA
 Parsing operand field
-Operand is a label: BUFEND-BUFFER
+Operand is a label: BUFFER
 
 Line is a comment. Skipping.
  .
@@ -427,7 +427,8 @@ Line:0018Searching for BUFFER(0000) with block offset: 006D
 Line:001ESearching for LENGTH(0003) with block offset: 006D
 Line:0021Searching for WRREC(0052) with block offset: 006D
 Line:0024Searching for RETADR(0000) with block offset: 006D
-Line:0030Searching for MAXLEN(1000) with block offset: 006D
+Line:1003Searching for BUFFER(0000) with block offset: 1006
+Line:0030Searching for MAXLEN(1003) with block offset: 006D
 Line:0034Searching for INPUT(0006) with block offset: 006D
 Line:0037Searching for RLOOP(0034) with block offset: 006D
 Line:003ASearching for INPUT(0006) with block offset: 006D
@@ -439,4 +440,4 @@ Line:0055Searching for LENGTH(0003) with block offset: 006D
 Line:005BSearching for WLOOP(0058) with block offset: 006D
 Line:005ESearching for BUFFER(0000) with block offset: 006D
 Line:0067Searching for WLOOP(0058) with block offset: 006D
-Pass 2 complete: output/copy.l / output/copy.st
+Pass 2 complete: output/work.l / output/work.st

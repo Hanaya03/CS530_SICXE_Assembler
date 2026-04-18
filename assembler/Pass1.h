@@ -70,6 +70,7 @@ class Pass1 {
 private:
 	static std::vector<SourceLine> mLines;
 	static std::unordered_map<std::string, int> mSymTab;
+        static std::unordered_map<std::string, Label> lSymTab;
 	static std::unordered_map<std::string, LiteralEntry> mLitTab;
         static std::vector<LiteralEntry> mLitVec;
 	
@@ -82,7 +83,7 @@ public:
     static std::vector<LiteralEntry> GetLitTab();
     std::vector<SourceLine> GetLines();
     static std::vector<SourceLine> GetAllLines() { return mLines; }
-    static std::unordered_map<std::string, int> GetSymTab() { return mSymTab; }
+    static std::unordered_map<std::string, Label> GetSymTab() { return lSymTab; }
 };
 
 #endif

@@ -2,6 +2,7 @@
 
 std::vector<SourceLine> Pass1::mLines;
 std::unordered_map<std::string, int> Pass1::mSymTab;
+std::unordered_map<std::string, Label> Pass1::lSymTab;
 std::unordered_map<std::string, LiteralEntry> Pass1::mLitTab;
 std::vector<LiteralEntry> Pass1::mLitVec;
 
@@ -94,6 +95,7 @@ bool Pass1::ReadFile(std::string filename) {
                 std::cerr << "Error: Duplicate label " << s.label << std::endl;
             }
             else {
+                lSymTab[s.label] = Label(PBlocks::GetDataPtr()->GetCtr(), 'R', PBlocks::GetDataPtr()->GetBlockNumber());
                 mSymTab[s.label] = PBlocks::GetDataPtr()->GetCtr();
             }
         }

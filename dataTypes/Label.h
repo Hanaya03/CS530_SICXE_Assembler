@@ -14,7 +14,8 @@ class Label{
 		Label(int a, char f, int n);
 
 		// void setBlock(int n);
-		int GetAddress();
+		int GetAddress() const;
+		int GetBlock() const;
 };
 
 #endif

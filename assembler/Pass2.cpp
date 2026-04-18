@@ -79,7 +79,7 @@ int Pass2::litLen(const std::string& raw) { //length in bytes of the literal
  
 // Resolve target address (symbol or literal)
  
-static int resolve(const SourceLine& s, const std::unordered_map<std::string,int>& sym,
+static int resolve(const SourceLine& s, const std::unordered_map<std::string,Label>& sym,
                    const std::vector<LiteralEntry>& lits) {
     if (s.mOperand.isLiteral) {
         std::string name = Pass2::litContent(s.mOperand.mLabel);
@@ -88,8 +88,8 @@ static int resolve(const SourceLine& s, const std::unordered_map<std::string,int
     if (s.mOperand.isLabel) {
         auto it = sym.find(s.mOperand.mLabel);
         if (it != sym.end()){ 
-		std::cout << "Line:" << toHex(s.address, 4) << "Searching for " << s.mOperand.mLabel << "(" << toHex(it->second, 4) << ") with block offset: " <<  toHex(PBlocks::GetBlock(s.mBlock)->GetLength(),4) << "\n";
-		return it->second + PBlocks::GetBlock(s.mBlock)->GetLength();
+		std::cout << "Line:" << toHex(s.address, 4) << "Searching for " << s.mOperand.mLabel << "(" << toHex(it->second.GetAddress(), 4) << ") with block offset: " <<  toHex(PBlocks::GetBlock(s.mBlock)->GetLength(),4) << "\n";
+		return it->second.GetAddress() + PBlocks::GetBlock(it->second.GetBlock())->GetStartAddr();
 	    }
 	}
     return s.mOperand.mValue;
@@ -98,7 +98,7 @@ static int resolve(const SourceLine& s, const std::unordered_map<std::string,int
 // Instruction encoding (all formats)
  
 static std::string encodeInstr(const SourceLine& s,
-                                const std::unordered_map<std::string,int>& sym,
+                                const std::unordered_map<std::string,Label>& sym,
                                 const std::vector<LiteralEntry>& lits,
                                 int baseReg) {
     Code* code = s.pCode;
@@ -190,7 +190,8 @@ bool Pass2::GenerateOutput(const std::string& sourceFile) {
  
         if (s.opcode == "BASE") {
             auto it = symTab.find(s.mOperand.mLabel);
-            if (it != symTab.end()) mBaseReg = it->second;
+            if (it != symTab.end()) 
+                mBaseReg = it->second.GetAddress() + PBlocks::GetBlock(it->second.GetBlock())->GetStartAddr();
             lst << addr << "\t" << s.label << "\t" << s.opcode << "\t" << s.mOperand.mLabel << "\n";
             continue;
         }
@@ -203,8 +204,9 @@ bool Pass2::GenerateOutput(const std::string& sourceFile) {
         }
  
         if (s.opcode == "WORD") {
-            int val = s.mOperand.isLabel ? symTab.count(s.mOperand.mLabel) ? symTab.at(s.mOperand.mLabel) : 0
-                                         : s.mOperand.mValue;
+            int val = s.mOperand.isLabel ? symTab.count(s.mOperand.mLabel) ? 
+                symTab.at(s.mOperand.mLabel).GetAddress() + PBlocks::GetBlock(symTab.at(s.mOperand.mLabel).GetBlock())->GetStartAddr() : 0
+                : s.mOperand.mValue;
             obj = toHex(val, 6);
         } else if (s.opcode == "BYTE") {
             obj = litToHex(s.mOperand.mLabel[0] == 'C' ? "=C'" + s.mOperand.mLabel.substr(2) : "=X'" + s.mOperand.mLabel.substr(2));
@@ -231,10 +233,12 @@ bool Pass2::GenerateOutput(const std::string& sourceFile) {
     // Symbol table
     st << "Symbol\t\tValue\n";
     st << "----------------------\n";
-    std::vector<std::pair<std::string,int>> syms(symTab.begin(), symTab.end());
-    std::sort(syms.begin(), syms.end(), [](auto& a, auto& b){ return a.second < b.second; });
+    std::vector<std::pair<std::string,Label>> syms(symTab.begin(), symTab.end());
+    std::sort(syms.begin(), syms.end(), [](auto& a, auto& b){ 
+        return a.second.GetAddress() < b.second.GetAddress(); 
+    });
     for (auto& kv : syms)
-        st << kv.first << "\t\t" << toHex(kv.second, 6) << "\n";
+        st << kv.first << "\t\t" << toHex(kv.second.GetAddress(), 6) << "\n";
     st << "\nLiteral\t\tHex\t\tAddress\t\tLength\n";
     st << "----------------------------------------------\n";
     for (auto& lit : mLiteralTable)

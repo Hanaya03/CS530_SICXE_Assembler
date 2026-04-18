@@ -16,6 +16,10 @@ Label::Label(int a, char f, int n){
 	mBlock = n;
 }
 
-int Label::GetAddress(){
+int Label::GetAddress() const{
 	return mAddress;
+}
+
+int Label::GetBlock() const{
+	return mBlock;
 }

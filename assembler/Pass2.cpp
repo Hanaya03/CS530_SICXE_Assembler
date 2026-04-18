@@ -175,12 +175,16 @@ bool Pass2::GenerateOutput(const std::string& sourceFile) {
             continue;
         }
  
+        if (s.originalLine[0] == '*') {
+            // emit literal pool
+            lst << toHex(s.address,4) << s.originalLine;
+            continue;
+        }
+
         if (s.opcode == "END" || s.opcode == "LTORG") {
             // emit literal pool
-            for (auto& lit : mLiteralTable)
-                lst << toHex(lit.address,4) << "\t*\t=C'" << lit.name << "'\t\t" << lit.operandHex << "\n";
             lst << "\t\t" << s.opcode << "\t" << s.mOperand.mLabel << "\n";
-            break;
+            continue;
         }
  
         if (s.opcode == "BASE") {

@@ -105,8 +105,13 @@ bool Pass1::ReadFile(std::string filename) {
             for (auto& lit : mLitVec){
                 if(!lit.assigned)
                 {
+                    SourceLine tmp;
+                    tmp.address = PBlocks::GetDataPtr()->GetCtr();
                     lit.address = PBlocks::GetDataPtr()->GetCtr();
                     PBlocks::GetDataPtr()->IncrementCtr(lit.length);
+                    tmp.originalLine = "*\t=C'" + lit.name + "'\t\t" + lit.operandHex + "\n";
+                    mLines.push_back(tmp);
+                    lit.assigned = true;
                 }
                 
             }

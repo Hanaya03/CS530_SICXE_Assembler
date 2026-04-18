@@ -133,7 +133,7 @@ static std::string encodeInstr(const SourceLine& s,
             disp = s.mOperand.mValue;                        // immediate numeric
         } else {
             int target = resolve(s, sym, lits);
-            int pcDisp = target - (s.address + 3);
+            int pcDisp = target - (s.address + PBlocks::GetBlock(s.mBlock)->GetStartAddr() + 3);
             if (pcDisp >= -2048 && pcDisp <= 2047) { p = 1; disp = pcDisp & 0xFFF; }
             else if (baseReg >= 0)                 { b = 1; disp = target - baseReg; }
             else{std::cerr << "Error:" << toHex(s.address, 4) << ": can't reach operand " << s.mOperand.mLabel << "\n"<< "PC relative displacement: " << toHex(pcDisp, 4)<< "\n";}
@@ -163,11 +163,18 @@ bool Pass2::GenerateOutput(const std::string& sourceFile) {
     mBaseReg = -1;
  
     for (auto& s : lines) {
-        lst << s.originalLine;
+        //lst << s.originalLine;
         if (s.isComment)    { lst << s.originalLine << "\n"; continue; }
-        if (s.opcode.empty()) continue;
+        
+	if (s.originalLine[0] == '*') {
+            // emit literal pool
+            lst << toHex(s.address,4) << "\t\t" << s.originalLine;
+            continue;
+        }
+        
+	if (s.opcode.empty()) continue;
  
-        std::string addr = toHex(s.address, 4);
+        std::string addr = toHex(s.address + PBlocks::GetBlock(s.mBlock)->GetStartAddr(), 4);
         std::string obj  = "";
  
         if (s.opcode == "START") {
@@ -176,11 +183,6 @@ bool Pass2::GenerateOutput(const std::string& sourceFile) {
             continue;
         }
  
-        if (s.originalLine[0] == '*') {
-            // emit literal pool
-            lst << "what" << toHex(s.address,4) << s.originalLine;
-            continue;
-        }
 
         if (s.opcode == "END" || s.opcode == "LTORG") {
             // emit literal pool

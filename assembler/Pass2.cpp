@@ -163,6 +163,7 @@ bool Pass2::GenerateOutput(const std::string& sourceFile) {
     mBaseReg = -1;
  
     for (auto& s : lines) {
+        lst << s.originalLine;
         if (s.isComment)    { lst << s.originalLine << "\n"; continue; }
         if (s.opcode.empty()) continue;
  
@@ -177,7 +178,7 @@ bool Pass2::GenerateOutput(const std::string& sourceFile) {
  
         if (s.originalLine[0] == '*') {
             // emit literal pool
-            lst << toHex(s.address,4) << s.originalLine;
+            lst << "what" << toHex(s.address,4) << s.originalLine;
             continue;
         }
 

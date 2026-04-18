@@ -15,6 +15,7 @@
 #include "PBlocks.h"
 #include "BData.h"
 #include "Pass2.h"
+#include "LiteralEntry.h"
 #include <cstdio>
 
 struct Bits{
@@ -69,8 +70,8 @@ class Pass1 {
 private:
 	static std::vector<SourceLine> mLines;
 	static std::unordered_map<std::string, int> mSymTab;
-	static std::unordered_map<std::string, LiteralEntry> Pass1::mLitTab;
-        static std::vector<LiteralEntry> Pass1::mLitVec;
+	static std::unordered_map<std::string, LiteralEntry> mLitTab;
+        static std::vector<LiteralEntry> mLitVec;
 	
 	static void ParseOperation(SourceLine*);
 	static void ParseOperand(SourceLine*);

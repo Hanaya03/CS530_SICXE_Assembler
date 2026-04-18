@@ -102,6 +102,8 @@ bool Pass1::ReadFile(std::string filename) {
         // Update LOCCTR for directives and instructions
         if (s.opcode == "END" || s.opcode == "LTORG") {
             // emit literal pool
+            s.mBlock = PBlocks::GetDataPtr()->GetBlockNumber();
+            mLines.push_back(s);
             for (auto& lit : mLitVec){
                 if(!lit.assigned)
                 {
@@ -109,12 +111,13 @@ bool Pass1::ReadFile(std::string filename) {
                     tmp.address = PBlocks::GetDataPtr()->GetCtr();
                     lit.address = PBlocks::GetDataPtr()->GetCtr();
                     PBlocks::GetDataPtr()->IncrementCtr(lit.length);
-                    tmp.originalLine = "*\t=C'" + lit.name + "'\t\t" + lit.operandHex + "\n";
+                    tmp.originalLine = "*\t" + lit.raw + "\t\t" + lit.operandHex + "\n";
                     mLines.push_back(tmp);
                     lit.assigned = true;
                 }
                 
             }
+		continue;
         }
         else if (s.opcode == "USE") {
             if(s.mOperand.mLabel.empty()){      PBlocks::SetCurrentBlock("(default)");}
@@ -189,12 +192,12 @@ void Pass1::ParseOperand(SourceLine* s) {
         s->mOperand.isLiteral = true;
 
         std::string name = Pass2::litContent(s->mOperand.mLabel);
-        bool dup = false;
-        for (auto& e : mLitVec) if (e.name == name) { dup = true; break; }
-        LiteralEntry e { false, name, Pass2::litToHex(s->mOperand.mLabel), PBlocks::GetDataPtr()->GetCtr(), Pass2::litLen(s->mOperand.mLabel) };
+        for (auto& e : mLitVec) if (e.name == name) { return; }
+        LiteralEntry e { false, s->mOperand.mLabel, name, Pass2::litToHex(s->mOperand.mLabel), PBlocks::GetDataPtr()->GetCtr(), Pass2::litLen(s->mOperand.mLabel) };
         PBlocks::GetDataPtr()->IncrementCtr(e.length);
         mLitTab[name] = e;
         mLitVec.push_back(e);
+	printf("Operand is a literal: %s\n", s->mOperand.mLabel.c_str());
         return;
     }
     if (label.size() >= 2 && label.substr(label.size() - 2) == ",X") {

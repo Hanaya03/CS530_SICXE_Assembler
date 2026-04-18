@@ -16,16 +16,8 @@
 #include "BData.h"
 #include "PBlocks.h"
 #include "BData.h"
+#include "LiteralEntry.h"
 
-struct LiteralEntry {
-    bool assigned;
-    std::string name;       // content between quotes, e.g. "EOF"
-    std::string operandHex; // hex-encoded bytes, e.g. "454F46"
-    int address;
-    int length;
-    int block;
-    
-};
 
 class Pass2 {
 private:
@@ -35,7 +27,7 @@ private:
     static int mProgStart;
     static int mProgEnd;
 
-    static void CollectLiterals(const std::vector<SourceLine>& lines);
+    //static void CollectLiterals(const std::vector<SourceLine>& lines);
 
 public:
     static std::string litToHex(const std::string& raw);

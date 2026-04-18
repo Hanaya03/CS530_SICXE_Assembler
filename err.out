@@ -1,0 +1,1 @@
+/usr/bin/g++ -Wall -g -MMD -MP -I./dataTypes -I./unitTest -I./assembler -c assembler/Pass2.cpp -o assembler/Pass2.o

@@ -67,6 +67,7 @@ Label: ENDFIL, Operation:LDA, Operand:=C'EOF'
 Parsing operation field.
 Parsed operation: LDA
 Parsing operand field
+Operand is a literal: =C'EOF'
 Operand is a value: 0
 
 Objects found for line:
@@ -343,6 +344,7 @@ Label: WLOOP, Operation:TD, Operand:=X'05'
 Parsing operation field.
 Parsed operation: TD
 Parsing operand field
+Operand is a literal: =X'05'
 Operand is a value: 0
 
 Objects found for line:
@@ -408,7 +410,6 @@ Parsing operation field.
 Parsed operation: LTORG
 Parsing operand field
 Operand is a label: 
-
 Objects found for line:
         END     FIRST
 Label: empty, Operation:END, Operand:FIRST
@@ -416,5 +417,26 @@ Parsing operation field.
 Parsed operation: END
 Parsing operand field
 Operand is a label: FIRST
-
+Line:0000Searching for RETADR(0000) with block offset: 0071
+Line:0003Searching for RDREC(002A) with block offset: 0071
+Line:0006Searching for LENGTH(0003) with block offset: 0071
+Line:000CSearching for ENDFIL(0018) with block offset: 0071
+Line:000FSearching for WRREC(0055) with block offset: 0071
+Line:0012Searching for CLOOP(0003) with block offset: 0071
+Line:001BSearching for BUFFER(0000) with block offset: 0071
+Line:0021Searching for LENGTH(0003) with block offset: 0071
+Line:0024Searching for WRREC(0055) with block offset: 0071
+Line:0027Searching for RETADR(0000) with block offset: 0071
+Line:0033Searching for MAXLEN(1000) with block offset: 0071
+Line:0037Searching for INPUT(0006) with block offset: 0071
+Line:003ASearching for RLOOP(0037) with block offset: 0071
+Line:003DSearching for INPUT(0006) with block offset: 0071
+Line:0043Searching for EXIT(004F) with block offset: 0071
+Line:0046Searching for BUFFER(0000) with block offset: 0071
+Line:004CSearching for RLOOP(0037) with block offset: 0071
+Line:004FSearching for LENGTH(0003) with block offset: 0071
+Line:0058Searching for LENGTH(0003) with block offset: 0071
+Line:005FSearching for WLOOP(005C) with block offset: 0071
+Line:0062Searching for BUFFER(0000) with block offset: 0071
+Line:006BSearching for WLOOP(005C) with block offset: 0071
 Pass 2 complete: output/copy.l / output/copy.st

@@ -33,8 +33,7 @@ bool Pass1::ReadFile(std::string filename) {
             continue;
         }
         if (line.size() > 0 && line[0] == '*') {
-            mLines.push_back(s);
-		printf("IDK what this star is suppose to represent but I know we don't need to worry about it.\n %s\n", line.c_str());
+		    printf("This line represent and emmited literal. Should not appear in a .sic source file.\n %s\n", line.c_str());
             continue;
         }
 
@@ -187,6 +186,25 @@ void Pass1::ParseOperand(SourceLine* s) {
         s->mBits.i = 1;
         label = label.substr(1);
     }
+
+    //star operand means this address
+    if (label == "*") {
+        s->mOperand.mValue = PBlocks::GetDataPtr()->GetCtr();
+        return;
+    }
+
+    //look for arithmetic operations
+    size_t minusPos = label.find('-');
+    size_t plusPos  = label.find('+');
+    size_t mulPos = label.find('*');
+    size_t divPos  = label.find('/');
+
+    if (minusPos != std::string::npos || plusPos != std::string::npos || mulPos != std::string::npos || divPos != std::string::npos) {
+        s->mOperand.isExpression = true;
+        s->mOperand.mLabel = label;
+        return;
+    }
+    
     if (!label.empty() && label[0] == '=') {
         // literal: simple addressing - the operand is the address of the literal
         s->mBits.n = 1;
@@ -195,10 +213,10 @@ void Pass1::ParseOperand(SourceLine* s) {
 
         std::string name = Pass2::litContent(s->mOperand.mLabel);
         for (auto& e : mLitVec) if (e.name == name) { return; }
-        LiteralEntry e { false, s->mOperand.mLabel, name, Pass2::litToHex(s->mOperand.mLabel), PBlocks::GetDataPtr()->GetCtr(), Pass2::litLen(s->mOperand.mLabel) };
+        LiteralEntry e { false, s->mOperand.mLabel, name, Pass2::litToHex(s->mOperand.mLabel), PBlocks::GetDataPtr()->GetCtr(), Pass2::litLen(s->mOperand.mLabel), PBlocks::GetDataPtr()->GetBlockNumber()};
         mLitTab[name] = e;
         mLitVec.push_back(e);
-	printf("Operand is a literal: %s\n", s->mOperand.mLabel.c_str());
+        printf("Operand is a literal: %s\n", s->mOperand.mLabel.c_str());
         return;
     }
     if (label.size() >= 2 && label.substr(label.size() - 2) == ",X") {

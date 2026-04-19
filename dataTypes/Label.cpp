@@ -23,3 +23,7 @@ int Label::GetAddress() const{
 int Label::GetBlock() const{
 	return mBlock;
 }
+
+char Label::GetFlag() const{
+	return mFlag;
+}

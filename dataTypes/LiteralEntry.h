@@ -10,5 +10,6 @@ struct LiteralEntry {
 	std::string operandHex; // hex-encoded bytes, e.g. "454F46"
 	int address;
 	int length;
+	int blockNumber;
 };
 #endif

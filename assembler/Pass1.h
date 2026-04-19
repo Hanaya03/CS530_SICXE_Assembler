@@ -41,6 +41,7 @@ struct Bits{
 struct Operand{
         bool isLabel = false;
 	bool isLiteral = false;
+        bool isExpression = false;
         std::string mLabel = "";
         int mValue = 0;
 

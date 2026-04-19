@@ -16,6 +16,7 @@ class Label{
 		// void setBlock(int n);
 		int GetAddress() const;
 		int GetBlock() const;
+		char GetFlag() const;
 };
 
 #endif

@@ -83,7 +83,7 @@ static int resolve(const SourceLine& s, const std::unordered_map<std::string,Lab
                    const std::vector<LiteralEntry>& lits) {
     if (s.mOperand.isLiteral) {
         std::string name = Pass2::litContent(s.mOperand.mLabel);
-        for (auto& l : lits) if (l.name == name) return l.address;
+        for (auto& l : lits) if (l.name == name) return l.address + PBlocks::GetBlock(l.blockNumber)->GetStartAddr();
     }
     if (s.mOperand.isLabel) {
         auto it = sym.find(s.mOperand.mLabel);
@@ -142,6 +142,66 @@ static std::string encodeInstr(const SourceLine& s,
     int b1 = (op & 0xFC) | (n << 1) | i;
     int b2 = (x << 7) | (b << 6) | (p << 5) | ((disp >> 8) & 0x0F);
     return toHex((b1 << 16) | (b2 << 8) | (disp & 0xFF), 6);
+}
+
+static int evaluateExpression(const std::string& expr,
+                               const std::unordered_map<std::string, Label>& sym) {
+    size_t minusPos = expr.find('-');
+    size_t plusPos  = expr.find('+');
+    size_t multPos  = expr.find('*');
+    size_t divPos   = expr.find('/');
+
+    // find which operator is present
+    char op = 0;
+    size_t opPos = std::string::npos;
+
+    if (plusPos  != std::string::npos) { op = '+'; opPos = plusPos;  }
+    if (minusPos != std::string::npos) { op = '-'; opPos = minusPos; }
+    if (multPos  != std::string::npos) { op = '*'; opPos = multPos;  }
+    if (divPos   != std::string::npos) { op = '/'; opPos = divPos;   }
+
+    if (op == 0) {
+        if (sym.count(expr)) {
+            auto& l = sym.at(expr);
+            if (l.GetFlag() == 'A') return l.GetAddress();
+            return l.GetAddress() + PBlocks::GetBlock(l.GetBlock())->GetStartAddr();
+        }
+        return std::stoi(expr);
+    }
+
+    std::string left  = expr.substr(0, opPos);
+    std::string right = expr.substr(opPos + 1);
+
+    int leftVal = 0, rightVal = 0;
+
+    if (sym.count(left)) {
+        auto& l = sym.at(left);
+        leftVal = (l.GetFlag() == 'A') ? l.GetAddress()
+                  : l.GetAddress() + PBlocks::GetBlock(l.GetBlock())->GetStartAddr();
+    } else {
+        leftVal = std::stoi(left);
+    }
+
+    if (sym.count(right)) {
+        auto& r = sym.at(right);
+        rightVal = (r.GetFlag() == 'A') ? r.GetAddress()
+                   : r.GetAddress() + PBlocks::GetBlock(r.GetBlock())->GetStartAddr();
+    } else {
+        rightVal = std::stoi(right);
+    }
+
+    switch (op) {
+        case '+': return leftVal + rightVal;
+        case '-': return leftVal - rightVal;
+        case '*': return leftVal * rightVal;
+        case '/': 
+            if (rightVal == 0) { 
+                std::cerr << "Error: division by zero in expression: " << expr << "\n"; 
+                return 0; 
+            }
+            return leftVal / rightVal;
+        default: return 0;
+    }
 }
  
 

@@ -213,7 +213,7 @@ void Pass1::ParseOperand(SourceLine* s) {
 
         std::string name = Pass2::litContent(s->mOperand.mLabel);
         for (auto& e : mLitVec) if (e.name == name) { return; }
-        LiteralEntry e { false, s->mOperand.mLabel, name, Pass2::litToHex(s->mOperand.mLabel), PBlocks::GetDataPtr()->GetCtr(), Pass2::litLen(s->mOperand.mLabel) };
+        LiteralEntry e { false, s->mOperand.mLabel, name, Pass2::litToHex(s->mOperand.mLabel), PBlocks::GetDataPtr()->GetCtr(), Pass2::litLen(s->mOperand.mLabel), PBlocks::GetDataPtr()->GetBlockNumber()};
         mLitTab[name] = e;
         mLitVec.push_back(e);
         printf("Operand is a literal: %s\n", s->mOperand.mLabel.c_str());

@@ -156,7 +156,7 @@ Label: BUFEND, Operation:EQU, Operand:*
 Parsing operation field.
 Parsed operation: EQU
 Parsing operand field
-Operand is a label: *
+Operand is a value: 4096
 
 Objects found for line:
 MAXLEN  EQU     BUFEND-BUFFER
@@ -164,7 +164,7 @@ Label: MAXLEN, Operation:EQU, Operand:BUFEND-BUFFER
 Parsing operation field.
 Parsed operation: EQU
 Parsing operand field
-Operand is a label: BUFEND-BUFFER
+Operand is a value: 0
 
 Line is a comment. Skipping.
  .

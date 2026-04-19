@@ -227,7 +227,7 @@ bool Pass2::GenerateOutput(const std::string& sourceFile) {
         
 	if (s.originalLine[0] == '*') {
             // emit literal pool
-            lst << toHex(s.address,4) << "\t\t" << s.originalLine;
+            lst << toHex(s.address,4) << "\t" << s.originalLine;
             continue;
         }
         
@@ -288,7 +288,7 @@ bool Pass2::GenerateOutput(const std::string& sourceFile) {
         if (s.mBits.x) opDisplay += ",X";
  
         std::string prefix = s.mBits.e ? "+" : "";
-        lst << addr << "\t" << s.label << "\t" << prefix << s.opcode << "\t" << opDisplay << "\t" << obj << "\t" << s.mBlock << "\n";
+        lst << addr << "\t" << s.label << "\t" << prefix << s.opcode << "\t" << opDisplay << "\t" << obj << "\n";
     }
  
     // Symbol table

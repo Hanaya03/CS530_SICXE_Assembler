@@ -85,6 +85,7 @@ public:
     std::vector<SourceLine> GetLines();
     static std::vector<SourceLine> GetAllLines() { return mLines; }
     static std::unordered_map<std::string, Label> GetSymTab() { return lSymTab; }
+	static void ClearTables();
 };
 
 #endif

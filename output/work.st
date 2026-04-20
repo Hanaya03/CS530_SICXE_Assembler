@@ -1,20 +1,5 @@
 Symbol		Value
 ----------------------
-FIRST		000000
-COPY		000000
-BUFFER		000000
-RETADR		000000
-CLOOP		000003
-LENGTH		000003
-INPUT		000006
-ENDFIL		000015
-RDREC		000027
-RLOOP		000034
-EXIT		00004C
-WRREC		000052
-WLOOP		000058
-BUFEND		001000
-MAXLEN		001003
 
 Literal		Hex		Address		Length
 ----------------------------------------------

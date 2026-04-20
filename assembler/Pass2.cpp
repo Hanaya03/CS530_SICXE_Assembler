@@ -88,7 +88,6 @@ static int resolve(const SourceLine& s, const std::unordered_map<std::string,Lab
     if (s.mOperand.isLabel) {
         auto it = sym.find(s.mOperand.mLabel);
         if (it != sym.end()){ 
-		std::cout << "Line:" << toHex(s.address, 4) << "Searching for " << s.mOperand.mLabel << "(" << toHex(it->second.GetAddress(), 4) << ") with block offset: " <<  toHex(PBlocks::GetBlock(s.mBlock)->GetLength(),4) << "\n";
 		return it->second.GetAddress() + PBlocks::GetBlock(it->second.GetBlock())->GetStartAddr();
 	    }
 	}
@@ -305,7 +304,10 @@ bool Pass2::GenerateOutput(const std::string& sourceFile) {
     st << "----------------------------------------------\n";
     for (auto& lit : mLiteralTable)
         st << lit.name << "\t\t" << lit.operandHex << "\t\t" << toHex(lit.address,4) << "\t\t" << lit.length << "\n";
+
+	mLiteralTable.clear();
+	lines.clear();
+	symTab.clear();
  
-    std::cout << "Pass 2 complete: " << outBase << ".l / " << outBase << ".st\n";
-    return true;
+        return true;
 }

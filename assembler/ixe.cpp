@@ -9,10 +9,11 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    std::string inputFile = argv[1];
+	for(int i = 1; i < argc; i++){
+		std::string inputFile = argv[i];
 
-    std::cout << "Input file: " << inputFile << "\n";
-
-	Pass1::ReadFile(inputFile);
-        Pass2::GenerateOutput(inputFile);
+		Pass1::ReadFile(inputFile);
+		Pass2::GenerateOutput(inputFile);
+		Pass1::ClearTables();
+	}
 }

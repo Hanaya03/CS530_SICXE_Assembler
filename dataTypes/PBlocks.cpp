@@ -38,6 +38,11 @@ void PBlocks::SetCurrentBlock(const std::string& s, int x){
     }else{ pCurrBlock = &it->second;} 
 }
 
+void PBlocks::ClearBlocks(){
+	mBlocks.clear();
+	mBlockOrder.clear();
+}
+
 void PBlocks::FinalizeBlocks(){
     int currentAddr = 0;
 

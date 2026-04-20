@@ -1,7 +1,6 @@
 #include "Pass1.h"
 
 std::vector<SourceLine> Pass1::mLines;
-std::unordered_map<std::string, int> Pass1::mSymTab;
 std::unordered_map<std::string, Label> Pass1::lSymTab;
 std::unordered_map<std::string, LiteralEntry> Pass1::mLitTab;
 std::vector<LiteralEntry> Pass1::mLitVec;
@@ -29,18 +28,15 @@ bool Pass1::ReadFile(std::string filename) {
             s.isComment = true;
             s.originalLine = line;
             mLines.push_back(s);
-            printf("Line is a comment. Skipping.\n %s\n", line.c_str());
             continue;
         }
         if (line.size() > 0 && line[0] == '*') {
-		    printf("This line represent and emmited literal. Should not appear in a .sic source file.\n %s\n", line.c_str());
             continue;
         }
 
         // Skip completely blank lines
         if (line.empty()) {
             mLines.push_back(s);
-		printf("this line is empty. skipping.\n");
             continue;
         }
 
@@ -53,18 +49,14 @@ bool Pass1::ReadFile(std::string filename) {
             s.label = "";
             s.opcode = first;
             s.mOperand.mLabel = second;
-		printf("Objects found for line:\n%s\nLabel: empty, Operation:%s, Operand:%s\n", line.c_str(), s.opcode.c_str(), s.mOperand.mLabel.c_str());
         }
         else {
             s.label = first;
             s.opcode = second;
             s.mOperand.mLabel = third;
-		printf("Objects found for line:\n%s\nLabel: %s, Operation:%s, Operand:%s\n", line.c_str(), s.label.c_str(), s.opcode.c_str(), s.mOperand.mLabel.c_str());
         }
 
-	printf("Parsing operation field.\n");
 	ParseOperation(&s);
-	printf("Parsed operation: %s\n", s.opcode.c_str());	
 
 
         // Handle START first so label gets correct starting address
@@ -75,29 +67,13 @@ bool Pass1::ReadFile(std::string filename) {
             
             s.address = PBlocks::GetDataPtr()->GetCtr();
         }else{
-            printf("Parsing operand field\n");
 
         s.address = PBlocks::GetDataPtr()->GetCtr();
 		
         ParseOperand(&s);
-
-		if(s.mOperand.isLabel){
-			printf("Operand is a label: %s\n", s.mOperand.mLabel.c_str());
-		}else{
-			printf("Operand is a value: %d\n", s.mOperand.mValue);
-		}
 	}
 
         // Add label to SYMTAB
-        if (!s.label.empty()) {
-            if (mSymTab.find(s.label) != mSymTab.end()) {
-                std::cerr << "Error: Duplicate label " << s.label << std::endl;
-            }
-            else {
-                lSymTab[s.label] = Label(PBlocks::GetDataPtr()->GetCtr(), 'R', PBlocks::GetDataPtr()->GetBlockNumber());
-                mSymTab[s.label] = PBlocks::GetDataPtr()->GetCtr();
-            }
-        }
 
 
         // Update LOCCTR for directives and instructions
@@ -156,14 +132,20 @@ bool Pass1::ReadFile(std::string filename) {
 
         s.mBlock = PBlocks::GetDataPtr()->GetBlockNumber();
 
-        printf("\n");
-
         mLines.push_back(s);
     }
 
     PBlocks::FinalizeBlocks();
 
     return true;
+}
+
+void Pass1::ClearTables(){
+	mLines.clear();
+	lSymTab.clear();
+	mLitTab.clear();
+	mLitVec.clear();
+	PBlocks::ClearBlocks();
 }
 
 void Pass1::ParseOperation(SourceLine* s){
@@ -216,7 +198,6 @@ void Pass1::ParseOperand(SourceLine* s) {
         LiteralEntry e { false, s->mOperand.mLabel, name, Pass2::litToHex(s->mOperand.mLabel), PBlocks::GetDataPtr()->GetCtr(), Pass2::litLen(s->mOperand.mLabel), PBlocks::GetDataPtr()->GetBlockNumber()};
         mLitTab[name] = e;
         mLitVec.push_back(e);
-        printf("Operand is a literal: %s\n", s->mOperand.mLabel.c_str());
         return;
     }
     if (label.size() >= 2 && label.substr(label.size() - 2) == ",X") {

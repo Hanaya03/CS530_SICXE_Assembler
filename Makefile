@@ -7,7 +7,7 @@
 # Assignment #2, SICXE Assembler		#
 #################################################
 
-EXEC = asmbl
+EXEC = lxe
 FILES := $(shell find . -name "*.cpp")
 CC = /usr/bin/g++
 LFLAGS = -g -no-pie #avoids randomization of the executable

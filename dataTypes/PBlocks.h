@@ -41,6 +41,7 @@ class PBlocks{
         static void SetCurrentBlock(const std::string& s);
         static void SetCurrentBlock(const std::string& s, int x);
 
+	static void ClearBlocks();
         static void FinalizeBlocks();
 };
 

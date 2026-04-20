@@ -150,6 +150,12 @@ bool Pass1::ReadFile(std::string filename) {
     return true;
 }
 
+void Pass1::ClearTables(){
+	lSymTab.clear();
+	mLitTab.clear();
+	PBlocks::ClearBlocks();
+}
+
 void Pass1::ParseOperation(SourceLine* s){
 	if (!s->opcode.empty() && s->opcode[0] == '+') {
         	s->mBits.e = 1;

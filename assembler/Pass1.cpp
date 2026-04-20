@@ -1,7 +1,6 @@
 #include "Pass1.h"
 
 std::vector<SourceLine> Pass1::mLines;
-std::unordered_map<std::string, int> Pass1::mSymTab;
 std::unordered_map<std::string, Label> Pass1::lSymTab;
 std::unordered_map<std::string, LiteralEntry> Pass1::mLitTab;
 std::vector<LiteralEntry> Pass1::mLitVec;
@@ -75,15 +74,6 @@ bool Pass1::ReadFile(std::string filename) {
 	}
 
         // Add label to SYMTAB
-        if (!s.label.empty()) {
-            if (mSymTab.find(s.label) != mSymTab.end()) {
-                std::cerr << "Error: Duplicate label " << s.label << std::endl;
-            }
-            else {
-                lSymTab[s.label] = Label(PBlocks::GetDataPtr()->GetCtr(), 'R', PBlocks::GetDataPtr()->GetBlockNumber());
-                mSymTab[s.label] = PBlocks::GetDataPtr()->GetCtr();
-            }
-        }
 
 
         // Update LOCCTR for directives and instructions
@@ -151,8 +141,10 @@ bool Pass1::ReadFile(std::string filename) {
 }
 
 void Pass1::ClearTables(){
+	mLines.clear();
 	lSymTab.clear();
 	mLitTab.clear();
+	mLitVec.clear();
 	PBlocks::ClearBlocks();
 }
 

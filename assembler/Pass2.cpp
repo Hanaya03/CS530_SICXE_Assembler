@@ -306,6 +306,8 @@ bool Pass2::GenerateOutput(const std::string& sourceFile) {
         st << lit.name << "\t\t" << lit.operandHex << "\t\t" << toHex(lit.address,4) << "\t\t" << lit.length << "\n";
 
 	mLiteralTable.clear();
+	lines.clear();
+	symTab.clear();
  
         return true;
 }

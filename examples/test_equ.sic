@@ -1,0 +1,6 @@
+TEST    START   0
+ALPHA   RESW    1
+BETA    EQU     *
+GAMMA   EQU     BETA-ALPHA
+        +LDT    #GAMMA
+        END     TEST

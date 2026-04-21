@@ -68,24 +68,25 @@ struct SourceLine {
 };
 
 class Pass1 {
-private:
-	static std::vector<SourceLine> mLines;
-	static std::unordered_map<std::string, int> mSymTab;
-        static std::unordered_map<std::string, Label> lSymTab;
-	static std::unordered_map<std::string, LiteralEntry> mLitTab;
-        static std::vector<LiteralEntry> mLitVec;
-	
-	static void ParseOperation(SourceLine*);
-	static void ParseOperand(SourceLine*);
-	static bool IsNumber(const std::string&);
-public:
-    static bool ReadFile(std::string filename);
-
-    static std::vector<LiteralEntry> GetLitTab();
-    std::vector<SourceLine> GetLines();
-    static std::vector<SourceLine> GetAllLines() { return mLines; }
-    static std::unordered_map<std::string, Label> GetSymTab() { return lSymTab; }
-	static void ClearTables();
-};
+        private:
+            static std::vector<SourceLine> mLines;
+            static std::unordered_map<std::string, int> mSymTab;
+            static std::unordered_map<std::string, Label> lSymTab;
+            static std::unordered_map<std::string, LiteralEntry> mLitTab;
+            static std::vector<LiteralEntry> mLitVec;
+            static bool mHadError;
+        
+            static void ParseOperation(SourceLine*);
+            static void ParseOperand(SourceLine*);
+            static bool IsNumber(const std::string&);
+            public:
+            static bool ReadFile(std::string filename);
+            static bool HadError();
+            static void ClearTables();
+            static std::vector<LiteralEntry> GetLitTab();
+            static std::vector<SourceLine> GetLines();
+            static std::vector<SourceLine> GetAllLines();
+            static std::unordered_map<std::string, Label> GetSymTab();
+        };
 
 #endif

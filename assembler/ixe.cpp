@@ -9,10 +9,17 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-	for(int i = 1; i < argc; i++){
+	for (int i = 1; i < argc; i++) {
 		std::string inputFile = argv[i];
-
+	
 		Pass1::ReadFile(inputFile);
+
+		if (Pass1::HadError()) {
+			std::cerr << "Assembly stopped due to Pass1 errors.\n";
+			Pass1::ClearTables();
+			continue;
+		}
+		
 		Pass2::GenerateOutput(inputFile);
 		Pass1::ClearTables();
 	}

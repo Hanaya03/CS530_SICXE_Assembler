@@ -1,0 +1,6 @@
+TEST    START   0
+        CLEAR   X
+        CLEAR   A
+        COMPR   A,S
+        TIXR    T
+        END     TEST

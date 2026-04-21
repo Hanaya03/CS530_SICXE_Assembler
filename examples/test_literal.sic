@@ -1,0 +1,5 @@
+TEST    START   0
+        LDA     =C'EOF'
+        LDCH    =X'05'
+        LTORG
+        END     TEST

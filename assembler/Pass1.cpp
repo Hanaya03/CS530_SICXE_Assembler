@@ -4,6 +4,7 @@ std::vector<SourceLine> Pass1::mLines;
 std::unordered_map<std::string, Label> Pass1::lSymTab;
 std::unordered_map<std::string, LiteralEntry> Pass1::mLitTab;
 std::vector<LiteralEntry> Pass1::mLitVec;
+bool Pass1::mHadError = false;  
 
 bool Pass1::ReadFile(std::string filename) {
     std::ifstream inFile(filename);
@@ -62,19 +63,90 @@ bool Pass1::ReadFile(std::string filename) {
         // Handle START first so label gets correct starting address
         if (s.opcode == "START") {
             locCtr = std::stoi(s.mOperand.mLabel, nullptr, 16);
-            // PBlocks::InsertBlockData(s.label);
             PBlocks::SetCurrentBlock("(default)", std::stoi(s.mOperand.mLabel, nullptr, 16));
-            
             s.address = PBlocks::GetDataPtr()->GetCtr();
-        }else{
+        } else {
+            s.address = PBlocks::GetDataPtr()->GetCtr();
+            ParseOperand(&s);
+        }   
 
-        s.address = PBlocks::GetDataPtr()->GetCtr();
-		
-        ParseOperand(&s);
-	}
 
         // Add label to SYMTAB
-
+        if (s.opcode == "EQU") {
+            if (s.label.empty()) {
+                std::cerr << "Error: EQU directive missing label\n";
+                mHadError = true;
+            } else if (lSymTab.find(s.label) != lSymTab.end()) {
+                std::cerr << "Error: Duplicate label: " << s.label << std::endl;
+                mHadError = true;
+            } else {
+                bool equOk = true;
+                int equValue = 0;
+                char flag = 'A';
+                int blockNum = PBlocks::GetDataPtr()->GetBlockNumber();
+        
+                if (s.mOperand.mLabel == "*") {
+                    equValue = s.address;
+                    flag = 'R';
+                } else if (s.mOperand.isExpression) {
+                    size_t minusPos = s.mOperand.mLabel.find('-');
+                    if (minusPos != std::string::npos) {
+                        std::string left  = s.mOperand.mLabel.substr(0, minusPos);
+                        std::string right = s.mOperand.mLabel.substr(minusPos + 1);
+                        if (lSymTab.count(left) && lSymTab.count(right)) {
+                            equValue = lSymTab[left].GetAddress() - lSymTab[right].GetAddress();
+                            flag = 'A';
+                        } else {
+                            std::cerr << "Error: Undefined symbol in EQU expression: "
+                                      << s.mOperand.mLabel << std::endl;
+                            mHadError = true;
+                            equOk = false;
+                        }
+                    } else {
+                        std::cerr << "Error: Unsupported EQU expression: "
+                                  << s.mOperand.mLabel << std::endl;
+                        mHadError = true;
+                        equOk = false;
+                    }
+                } else if (s.mOperand.isLabel) {
+                    if (lSymTab.count(s.mOperand.mLabel)) {
+                        Label lbl = lSymTab[s.mOperand.mLabel];
+                        equValue = lbl.GetAddress();
+                        flag = lbl.GetFlag();
+                        blockNum = lbl.GetBlock();
+                    } else {
+                        std::cerr << "Error: Undefined symbol in EQU: "
+                                  << s.mOperand.mLabel << std::endl;
+                        mHadError = true;
+                        equOk = false;
+                    }
+                } else {
+                    equValue = s.mOperand.mValue;
+                    flag = 'A';
+                }
+        
+                if (equOk) {
+                    lSymTab[s.label] = Label(equValue, flag, blockNum);
+                }
+            }
+        
+            s.mBlock = PBlocks::GetDataPtr()->GetBlockNumber();
+            mLines.push_back(s);
+            continue;
+        }
+        // Normal (non-EQU) labels go into SYMTAB here
+        if (!s.label.empty()) {
+            if (lSymTab.find(s.label) != lSymTab.end()) {
+                std::cerr << "Error: Duplicate label: " << s.label << std::endl;
+                mHadError = true;
+            } else {
+                lSymTab[s.label] = Label(
+                    s.address,
+                    'R',
+                    PBlocks::GetDataPtr()->GetBlockNumber()
+                );
+            }
+        }
 
         // Update LOCCTR for directives and instructions
         if (s.opcode == "END" || s.opcode == "LTORG") {
@@ -146,7 +218,13 @@ void Pass1::ClearTables(){
 	mLitTab.clear();
 	mLitVec.clear();
 	PBlocks::ClearBlocks();
+    mHadError = false; 
 }
+
+bool Pass1::HadError() {   // ← separate function, outside ClearTables
+    return mHadError;
+}
+
 
 void Pass1::ParseOperation(SourceLine* s){
 	if (!s->opcode.empty() && s->opcode[0] == '+') {
@@ -216,7 +294,7 @@ std::vector<LiteralEntry> Pass1::GetLitTab(){return mLitVec;}
 
 
 bool Pass1::IsNumber(const std::string& s) {
-    if (s.empty()) return false;
+    if (s.empty()) return false; 
 
     for (char c : s) {
         if (!std::isdigit(c)) return false;
@@ -224,6 +302,10 @@ bool Pass1::IsNumber(const std::string& s) {
     return true;
 }
 
-std::vector<SourceLine> Pass1::GetLines() {
+std::vector<SourceLine> Pass1::GetAllLines() {
     return mLines;
+}
+
+std::unordered_map<std::string, Label> Pass1::GetSymTab() {
+    return lSymTab;
 }

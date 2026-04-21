@@ -1,0 +1,6 @@
+TEST    START   0
+FIRST   LDA     ALPHA
+        STA     BETA
+ALPHA   WORD    1
+BETA    RESW    1
+        END     FIRST

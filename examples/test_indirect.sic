@@ -1,0 +1,4 @@
+TEST    START   0
+PTR     WORD    3
+        LDA     @PTR
+        END     TEST

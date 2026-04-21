@@ -1,0 +1,7 @@
+TEST    START   0
+        +LDB    #TARGET
+        BASE    TARGET
+        LDA     TARGET
+        NOBASE
+TARGET  RESW    1
+        END     TEST

@@ -2,7 +2,7 @@
 
 ## Team Information
 
-Team member | Class account / RedId 
+Team member | Class account / RedId\n
 Hector Anaya  CSSC2505  826734851
 Emiliano Nolasco CSSC2545 130310255
 Ethan Fudge cssc2519 827570933

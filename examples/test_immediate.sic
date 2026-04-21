@@ -1,0 +1,4 @@
+TEST    START   0
+        LDA     #5
+        COMP    #0
+        END     TEST

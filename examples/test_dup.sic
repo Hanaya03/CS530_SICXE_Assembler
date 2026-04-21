@@ -1,0 +1,4 @@
+TEST    START   0
+ALPHA   WORD    1
+ALPHA   WORD    2
+        END     TEST

@@ -1,0 +1,5 @@
+TEST    START   0
+TABLE   RESW    10
+        LDX     #0
+        LDA     TABLE,X
+        END     TEST

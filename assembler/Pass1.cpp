@@ -14,7 +14,7 @@ bool Pass1::ReadFile(std::string filename) {
         return false;
     }
 
-    int locCtr = 0;
+
 
     std::string line;
 
@@ -60,8 +60,8 @@ bool Pass1::ReadFile(std::string filename) {
 
 
         // Handle START first so label gets correct starting address
+        //PBlocks is equivelent to LOCCTR
         if (s.opcode == "START") {
-            locCtr = std::stoi(s.mOperand.mLabel, nullptr, 16);
             PBlocks::SetCurrentBlock("(default)", std::stoi(s.mOperand.mLabel, nullptr, 16));
             s.address = PBlocks::GetDataPtr()->GetCtr();
         } else {
@@ -148,6 +148,7 @@ bool Pass1::ReadFile(std::string filename) {
         }
 
         // Update LOCCTR for directives and instructions
+        //
         if (s.opcode == "END" || s.opcode == "LTORG") {
             // emit literal pool
             s.mBlock = PBlocks::GetDataPtr()->GetBlockNumber();
@@ -175,29 +176,23 @@ bool Pass1::ReadFile(std::string filename) {
             
         }else if (s.opcode == "WORD") {
             PBlocks::GetDataPtr()->IncrementCtr(3);
-            locCtr += 3;
         }
         else if (s.opcode == "RESW") {
             PBlocks::GetDataPtr()->IncrementCtr(s.mOperand.mValue * 3);
-            locCtr += s.mOperand.mValue * 3; // words are 3 bytes each
         }
         else if (s.opcode == "RESB") {
             PBlocks::GetDataPtr()->IncrementCtr(s.mOperand.mValue);
-            locCtr += s.mOperand.mValue;
         }
         else if (s.opcode == "BYTE") {
             if (s.mOperand.mLabel.size() >= 3 && s.mOperand.mLabel[0] == 'C' && s.mOperand.mLabel[1] == '\'') {
             PBlocks::GetDataPtr()->IncrementCtr(s.mOperand.mLabel.size() - 3);
-                locCtr += s.mOperand.mLabel.size() - 3;
             }
             else if (s.mOperand.mLabel.size() >= 3 && s.mOperand.mLabel[0] == 'X' && s.mOperand.mLabel[1] == '\'') {
             PBlocks::GetDataPtr()->IncrementCtr((s.mOperand.mLabel.size() - 3) / 2);
-                locCtr += (s.mOperand.mLabel.size() - 3) / 2;
             }
         }
         else if (OpCode::ValidateOperation(s.opcode)) {
-            PBlocks::GetDataPtr()->IncrementCtr((s.mBits.e == 1) ? 4 : 3);
-            locCtr += (s.mBits.e == 1) ? 4 : 3;   // format 4 = 4 bytes, format 3 = 3 bytes
+            PBlocks::GetDataPtr()->IncrementCtr((s.mBits.e == 1) ? 4 : 3);// format 4 = 4 bytes, format 3 = 3 bytes
             s.pCode = OpCode::GetCode(s.opcode);
         }
 

@@ -18,33 +18,9 @@ class OpCode{
 	private:
 		static std::unordered_map<std::string, Code> mOpTable;
 	public:
-		
-		/***************************************************************************
-		 * Read the file ./data/opcodes.txt and populate the mOpTable hash table 
-		 * with the read values
-		 *
-		 * Input: 
-		 * 	None
-		 *
-		 * Output:
-		 * 	None
-		 **************************************************************************/
-		static void PopulateTable();
-		
-		/***************************************************************************
-		 * Given some input string, check if that key exists in the mOpTable hash table
-		 *      
-		 * Input:    
-		 *     std::string c - The operation that the parser is currently parsing
-		 *
-		 * Output:
-		 *	bool - True means the inputted operation exists in the hashtable
-		 *		and is therefore a valid operation, else it's an invalid
-		 *		operation and parser should flag accordingly
-		 ***************************************************************************/
-		static bool ValidateOperation(std::string);
-
-		static Code* GetCode(std::string);
+		static void PopulateTable();                  // loads mOpTable from data/opcodes.txt
+        static bool ValidateOperation(std::string);   // returns true if mnemonic exists in mOpTable
+        static Code* GetCode(std::string);            // returns pointer to Code object for given mnemonic
 };
 
 #endif

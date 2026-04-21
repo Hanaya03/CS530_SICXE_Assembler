@@ -28,6 +28,7 @@ int PBlocks::GetProgramLength(){
 
 void PBlocks::SetCurrentBlock(const std::string& s){
     auto it = mBlocks.find(s);
+    // New block: register and initialize counter to 0
     if (it == mBlocks.end()) {
         mBlocks[s] = BlockData(mBlockOrder.size());
         mBlockOrder.push_back(s);
@@ -39,6 +40,7 @@ void PBlocks::SetCurrentBlock(const std::string& s){
 void PBlocks::SetCurrentBlock(const std::string& s, int x){
     auto it = mBlocks.find(s);
     if (it == mBlocks.end()) {
+        // New block: register and initialize counter to x
         mBlocks[s] = BlockData(mBlockOrder.size());
         mBlockOrder.push_back(s);
         pCurrBlock = &mBlocks[s];
@@ -54,6 +56,7 @@ void PBlocks::ClearBlocks(){
 void PBlocks::FinalizeBlocks(){
     int currentAddr = 0;
 
+    // Walk blocks in insertion order, assigning sequential start addresses
     for (const auto& name : mBlockOrder) {
         BlockData& block = mBlocks[name];
 

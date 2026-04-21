@@ -17,8 +17,8 @@ class Code{
 		int mFormat;
 		int mLength;
 	public:
-		Code();
-		Code(int, int, int);
+		Code();					// defaults: hex=0x00, format=0, length=0
+        Code(int, int, int);    // hex, format, length
 		int GetHex();
 		int GetLength();
 		int GetFormat();

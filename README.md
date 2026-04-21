@@ -2,10 +2,10 @@
 
 ## Team Information
 
-Team member | Class account / RedId\n
-Hector Anaya  CSSC2505  826734851
-Emiliano Nolasco CSSC2545 130310255
-Ethan Fudge cssc2519 827570933
+Team member | Class account / RedId<br />
+Hector Anaya  CSSC2505  826734851<br />
+Emiliano Nolasco CSSC2545 130310255<br />
+Ethan Fudge cssc2519 827570933<br />
 
 > Note: The uploaded files explicitly identify Hector Anaya in the Makefile comments. If this project was completed by a team of two or three, add the remaining member names and RedIDs here and mirror them in each source/header file before final submission.
 

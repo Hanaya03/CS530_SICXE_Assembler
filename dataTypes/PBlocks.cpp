@@ -18,6 +18,14 @@ BlockData* PBlocks::GetBlock(int n){
 	return &mBlocks[mBlockOrder[n]];
 }
 
+BlockData* PBlocks::GetLastBlock(){
+	return &mBlocks[mBlockOrder.back()];
+}
+
+int PBlocks::GetProgramLength(){
+	return mBlocks[mBlockOrder.back()].GetStartAddr() +  mBlocks[mBlockOrder.back()].GetLength();
+}
+
 void PBlocks::SetCurrentBlock(const std::string& s){
     auto it = mBlocks.find(s);
     if (it == mBlocks.end()) {

@@ -37,6 +37,9 @@ class PBlocks{
         static void InsertBlockData(const std::string s);
 
         static BlockData* GetBlock(int n);
+        static BlockData* GetLastBlock();
+
+	static int GetProgramLength();
 
         static void SetCurrentBlock(const std::string& s);
         static void SetCurrentBlock(const std::string& s, int x);

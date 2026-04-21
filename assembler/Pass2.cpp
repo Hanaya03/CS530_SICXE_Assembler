@@ -288,18 +288,19 @@ bool Pass2::GenerateOutput(const std::string& sourceFile) {
     }
 
     // Symbol table
-    st << "Symbol\t\tValue\n";
-    st << "----------------------\n";
+    st << "CSect\tSymbol\tValue\tLENGTH\tFlags:\n";
+    st << "--------------------------------------\n";
+    st << mProgName <<"\t\t" << toHex(PBlocks::GetBlock(0)->GetStartAddr(), 6) << "\t" << toHex(PBlocks::GetProgramLength(), 6) << "\n";
     std::vector<std::pair<std::string,Label>> syms(symTab.begin(), symTab.end());
     std::sort(syms.begin(), syms.end(), [](auto& a, auto& b){
         return symAddr(a.second) < symAddr(b.second);
     });
     for (auto& kv : syms)
-        st << kv.first << "\t\t" << toHex(symAddr(kv.second), 6) << "\n";
+        st << "\t" << kv.first << "\t\t" << toHex(symAddr(kv.second), 6) << "\t" << kv.second.GetFlag() << "\n";
 
     // Literal table
-    st << "\nLiteral\t\tHex\t\tAddress\t\tLength\n";
-    st << "----------------------------------------------\n";
+    st << "\nLiteral\t\tHex\t\tAddress\t\tLength:\n";
+    st << "-------------------------------------------------------\n";
     for (auto& lit : mLiteralTable)
         st << lit.name << "\t\t" << lit.operandHex << "\t\t"
            << toHex(lit.address + PBlocks::GetBlock(lit.blockNumber)->GetStartAddr(), 4)

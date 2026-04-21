@@ -14,7 +14,6 @@ bool Pass1::ReadFile(std::string filename) {
         return false;
     }
 
-    OpCode::PopulateTable();
     int locCtr = 0;
 
     std::string line;

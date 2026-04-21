@@ -1,4 +1,5 @@
 #include <iostream>
+#include "OpCode.h"
 #include "Pass1.h"
 #include "Pass2.h"
 
@@ -8,6 +9,8 @@ int main(int argc, char* argv[]) {
         std::cerr << "Usage: " << argv[0] << " <input_file>\n";
         return 1;
     }
+
+	OpCode::PopulateTable();
 
 	for (int i = 1; i < argc; i++) {
 		std::string inputFile = argv[i];

@@ -34,6 +34,8 @@ public:
     static int litLen(const std::string& raw);
     static std::string litContent(const std::string& raw);
     static bool GenerateOutput(const std::string& sourceFile);
+    static int evaluateExpression(const std::string& expr,
+        const std::unordered_map<std::string, Label>& sym);
 };
 
 #endif

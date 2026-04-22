@@ -21,7 +21,7 @@ bool Pass1::ReadFile(std::string filename) {
 
     if (!inFile) {
         std::cerr << "Error: Could not open file: " << filename << std::endl;
-        return false;
+        exit(EXIT_FAILURE);
     }
 
     int locCtr = 0;
@@ -84,10 +84,10 @@ bool Pass1::ReadFile(std::string filename) {
         if (s.opcode == "EQU") {
             if (s.label.empty()) {
                 std::cerr << "Error: EQU directive missing label\n";
-                mHadError = true;
+                exit(EXIT_FAILURE);
             } else if (lSymTab.find(s.label) != lSymTab.end()) {
                 std::cerr << "Error: Duplicate label: " << s.label << std::endl;
-                mHadError = true;
+                exit(EXIT_FAILURE);
             } else {
                 bool equOk = true;
                 int equValue = 0;
@@ -108,14 +108,12 @@ bool Pass1::ReadFile(std::string filename) {
                         } else {
                             std::cerr << "Error: Undefined symbol in EQU expression: "
                                       << s.mOperand.mLabel << std::endl;
-                            mHadError = true;
-                            equOk = false;
+                            exit(EXIT_FAILURE);
                         }
                     } else {
                         std::cerr << "Error: Unsupported EQU expression: "
                                   << s.mOperand.mLabel << std::endl;
-                        mHadError = true;
-                        equOk = false;
+                        exit(EXIT_FAILURE);
                     }
                 } else if (s.mOperand.isLabel) {
                     if (lSymTab.count(s.mOperand.mLabel)) {
@@ -126,8 +124,7 @@ bool Pass1::ReadFile(std::string filename) {
                     } else {
                         std::cerr << "Error: Undefined symbol in EQU: "
                                   << s.mOperand.mLabel << std::endl;
-                        mHadError = true;
-                        equOk = false;
+                        exit(EXIT_FAILURE);
                     }
                 } else {
                     equValue = s.mOperand.mValue;
@@ -147,7 +144,7 @@ bool Pass1::ReadFile(std::string filename) {
         if (!s.label.empty()) {
             if (lSymTab.find(s.label) != lSymTab.end()) {
                 std::cerr << "Error: Duplicate label: " << s.label << std::endl;
-                mHadError = true;
+                exit(EXIT_FAILURE);
             } else {
                 lSymTab[s.label] = Label(
                     s.address,

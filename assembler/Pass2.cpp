@@ -123,7 +123,7 @@ int Pass2::evaluateExpression(const std::string& expr,
         case '/':
             if (rightVal == 0) {
                 std::cerr << "Error: division by zero in expression: " << expr << "\n";
-                return 0;
+                exit(EXIT_FAILURE);
             }
             return leftVal / rightVal;
         default: return 0;
@@ -146,7 +146,7 @@ static std::string encodeInstr(const SourceLine& s,
         if (!found) {
             std::cerr << "Error:" << toHex(s.address, 4)
                       << ": undefined symbol " << s.mOperand.mLabel << "\n";
-            return "";
+            exit(EXIT_FAILURE);
         }
         int b1 = (op & 0xFC) | (s.mBits.n << 1) | s.mBits.i;
         int b2 = (s.mBits.x << 7) | 0x10 | ((addr >> 16) & 0x0F);
@@ -181,7 +181,7 @@ static std::string encodeInstr(const SourceLine& s,
             if (!found) {
                 std::cerr << "Error:" << toHex(s.address, 4)
                           << ": undefined symbol " << s.mOperand.mLabel << "\n";
-                return "";
+                exit(EXIT_FAILURE);
             }
             int pcDisp = target - (s.address + PBlocks::GetBlock(s.mBlock)->GetStartAddr() + 3);
             if      (pcDisp >= -2048 && pcDisp <= 2047) { p = 1; disp = pcDisp & 0xFFF; }
@@ -190,7 +190,7 @@ static std::string encodeInstr(const SourceLine& s,
                 std::cerr << "Error:" << toHex(s.address, 4)
                           << ": can't reach operand " << s.mOperand.mLabel
                           << "\nPC relative displacement: " << toHex(pcDisp, 4) << "\n";
-                return "";
+                exit(EXIT_FAILURE);
             }
         }
     }
@@ -206,7 +206,7 @@ bool Pass2::GenerateOutput(const std::string& sourceFile) {
     system("mkdir -p output");
     std::string outBase = "output/" + filename;
     std::ofstream lst(outBase + ".l"), st(outBase + ".st");
-    if (!lst || !st) { std::cerr << "Error: cannot open output files\n"; return false; }
+    if (!lst || !st) { std::cerr << "Error: cannot open output files\n"; exit(EXIT_FAILURE); }
 
     auto lines  = Pass1::GetAllLines();
     auto symTab = Pass1::GetSymTab();

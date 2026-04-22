@@ -7,7 +7,6 @@ Hector Anaya  CSSC2505  826734851<br />
 Emiliano Nolasco CSSC2545 130310255<br />
 Ethan Fudge cssc2519 827570933<br />
 
-> Note: The uploaded files explicitly identify Hector Anaya in the Makefile comments. If this project was completed by a team of two or three, add the remaining member names and RedIDs here and mirror them in each source/header file before final submission.
 
 ## Project Summary
 
@@ -313,20 +312,6 @@ The modular file layout made it easier to separate responsibilities. Breaking th
 
 **Areas for improvement**  
 For a future iteration, the team could improve consistency between repository layout and runtime assumptions (for example, the opcode-file path), increase explicit error reporting, and keep one authoritative set of regression outputs for every included test case.
-
-> Before submitting, replace or expand this section with the real team workflow and contributions.
-
-## Important Submission Checklist
-
-Before turning in the final project, verify the following:
-
-- [ ] All team member names and RedIDs are included in `README.md`
-- [ ] All source files, header files, and the `Makefile` contain the required team identification comments
-- [ ] `Makefile` builds the executable as `lxe`
-- [ ] `opcodes.txt` is placed where the runtime expects it, or the source path is updated
-- [ ] The selected test files are included with the submission
-- [ ] The design artifact (`Tentative Assembler Diagram.drawio`, or exported equivalent) is included
-- [ ] Final `.l` and `.st` outputs are regenerated and spot-checked before submission
 
 ## Closing Notes
 

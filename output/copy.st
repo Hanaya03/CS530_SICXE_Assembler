@@ -1,8 +1,8 @@
 CSect	Symbol	Value	LENGTH	Flags:
 --------------------------------------
 COPY		000000	001078
-	FIRST		000000	R
 	COPY		000000	R
+	FIRST		000000	R
 	CLOOP		000003	R
 	ENDFIL		000015	R
 	RDREC		000027	R

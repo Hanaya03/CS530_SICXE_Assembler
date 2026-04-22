@@ -1,3 +1,13 @@
+/************************************************
+* BData.h										*
+*												*
+* Hector Anaya 826734851        				*
+* Emiliano Nolasco 130310255        			*
+* Ethan Fudge 827570933         				*
+*												*
+* CS530, Spring 2026							*
+* Assignment #2, SICXE Assembler				*
+*************************************************/
 #ifndef BData_H
 #define BData_H
 
@@ -5,6 +15,16 @@
 #include <vector>
 #include <string>
 
+/**************************************************************************************
+ * Class to track the location counter and address metadata for a single program block
+ * 
+ * 
+ * Member Variables:
+ *      locCtr: This Program block's location counter
+ *      startAddr: the starting address of this program block
+ *      length: The total size of this program block
+ *      blockNumber: This program block's assigned value- for ordering/indexing
+ *************************************************************************************/
 class BlockData{
     private:
         int locCtr;
@@ -13,11 +33,11 @@ class BlockData{
         int blockNumber;
 
     public:
-        BlockData();
-        BlockData(int n);
+        BlockData();       // defaults: all fields 0
+        BlockData(int n);  // initializes blockNumber to n, rest default to 0
 
-        void IncrementCtr(int x);
-        void SetCtr(int x);
+        void IncrementCtr(int x);  // adds x to locCtr
+        void SetCtr(int x);        // sets locCtr to x
         int GetCtr();
         
         void SetStartAddr(int a);

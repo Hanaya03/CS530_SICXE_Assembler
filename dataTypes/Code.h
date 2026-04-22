@@ -1,3 +1,13 @@
+/************************************************
+* Code.h										*
+*												*
+* Hector Anaya 826734851        				*
+* Emiliano Nolasco 130310255        			*
+* Ethan Fudge 827570933         				*
+*												*
+* CS530, Spring 2026							*
+* Assignment #2, SICXE Assembler				*
+*************************************************/
 #ifndef CODE_H
 
 #define CODE_H
@@ -17,8 +27,8 @@ class Code{
 		int mFormat;
 		int mLength;
 	public:
-		Code();
-		Code(int, int, int);
+		Code();					// defaults: hex=0x00, format=0, length=0
+        Code(int, int, int);    // hex, format, length
 		int GetHex();
 		int GetLength();
 		int GetFormat();

@@ -1,3 +1,13 @@
+/************************************************
+* Pass1.cpp										*
+*												*
+* Hector Anaya 826734851        				*
+* Emiliano Nolasco 130310255        			*
+* Ethan Fudge 827570933         				*
+*												*
+* CS530, Spring 2026							*
+* Assignment #2, SICXE Assembler				*
+*************************************************/
 #include "Pass1.h"
 
 std::vector<SourceLine> Pass1::mLines;

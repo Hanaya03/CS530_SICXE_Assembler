@@ -1,3 +1,13 @@
+/************************************************
+* OpCode.cpp									*
+*												*
+* Hector Anaya 826734851        				*
+* Emiliano Nolasco 130310255        			*
+* Ethan Fudge 827570933         				*
+*												*
+* CS530, Spring 2026							*
+* Assignment #2, SICXE Assembler				*
+*************************************************/
 #include <fstream>
 #include <sstream>
 #include <iostream>
@@ -7,13 +17,8 @@
 
 std::unordered_map<std::string, Code> OpCode::mOpTable;
 
-/***************************************************************************
-* Did NOT want to hard code the OpCode table in the code so I decided to 
-* make an algorithm to read them from a file and populate the table 
-* automatically. Easier to maintain, imo.
-**************************************************************************/
 void OpCode::PopulateTable(){
-
+	// Read from file instead of hardcoding — easier to maintain and extend
 	std::ifstream file("data/opcodes.txt");
 	std::string name;
 	int hex, format, length;
@@ -23,9 +28,6 @@ void OpCode::PopulateTable(){
 	}
 }
 
-/***************************************************************************
-* kinda, sorta, not really a getter 
-***************************************************************************/
 bool OpCode::ValidateOperation(std::string c){
 	
 	if(mOpTable.find(c) != mOpTable.end())
@@ -33,9 +35,6 @@ bool OpCode::ValidateOperation(std::string c){
 	return false;
 }
 
-/*****************************************************************************
- * actually is a getter
- *************************************************************************/
 Code* OpCode::GetCode(std::string c){
 	return &mOpTable[c];
 }

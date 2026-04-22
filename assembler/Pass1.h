@@ -1,3 +1,13 @@
+/************************************************
+* Pass1.h                                       *
+*						*
+* Hector Anaya 826734851        		*
+* Emiliano Nolasco 130310255    		*
+* Ethan Fudge 827570933         		*
+*						*
+* CS530, Spring 2026				*
+* Assignment #2, SICXE Assembler		*
+*************************************************/
 #ifndef PASS1_H
 #define PASS1_H
 
@@ -10,7 +20,6 @@
 #include <sstream>
 #include "OpCode.h"
 #include "Code.h"
-#include "Tokens.h"
 #include "Label.h"
 #include "PBlocks.h"
 #include "BData.h"

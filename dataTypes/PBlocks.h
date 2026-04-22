@@ -1,3 +1,14 @@
+
+/************************************************
+* PBlocks.h					*
+*						*
+* Hector Anaya 826734851       			*
+* Emiliano Nolasco 130310255        	        *
+* Ethan Fudge 827570933         		*
+*						*
+* CS530, Spring 2026				*
+* Assignment #2, SICXE Assembler		*
+*************************************************/
 #ifndef PBLOCKS_H
 #define PBLOCKS_H
 
@@ -7,6 +18,16 @@
 #include <string>
 #include "BData.h"
 
+/************************************************************************
+ * Class to maintain an organized list of the current program blocks found
+ * in the .sic file and their BData objects
+ * 
+ * Member variables:
+ * 	mBlocks: A dictionary to provide lookup via names for BData objects
+ *	mBlockOrder: A vector to maintain order and indexing of BData names
+ *	pCurrBlock: Pointer to keep track of the current program block's
+ *                  Bdata object
+ ************************************************************************/
 class PBlocks{
 	private:
         static std::unordered_map<std::string, BlockData> mBlocks;
@@ -14,38 +35,21 @@ class PBlocks{
         static BlockData* pCurrBlock;
 		
 	public:
-        /***********************************************************************
-         * Return a pointer to the BlockData object specified by pCurrBlock
-         * 
-         * input:
-         *      none
-         * 
-         * output:
-         *      BlockData* - The pointer to the BData object specified by pCurrBlock
-         ************************************************************************/
-        static BlockData* GetDataPtr();
+        
+        static BlockData* GetDataPtr();                         // returns pointer to current block
+        static void InsertBlockData(const std::string s);       // adds new block, throws on duplicate
 
-        /***********************************************************************
-         * Add an entry to the mBlocks member variable
-         * 
-         * input:
-         *      std::string s - The name of the new program block to add.
-         * 
-         * output:
-         *      none
-         ************************************************************************/
-        static void InsertBlockData(const std::string s);
+        static BlockData* GetBlock(int n);                      // returns block at index n
+        static BlockData* GetLastBlock();                       // returns last inserted block
 
-        static BlockData* GetBlock(int n);
-        static BlockData* GetLastBlock();
+        static int GetProgramLength();                          // total program length in bytes
 
-	static int GetProgramLength();
+        static void SetCurrentBlock(const std::string& s);        // sets current block, counter defaults to 0
+        static void SetCurrentBlock(const std::string& s, int x); // sets current block, counter initialized to x
 
-        static void SetCurrentBlock(const std::string& s);
-        static void SetCurrentBlock(const std::string& s, int x);
-
-	static void ClearBlocks();
-        static void FinalizeBlocks();
+        static void ClearBlocks();                                 // resets all block data
+        static void FinalizeBlocks();                              // assigns final start addresses and lengths to all blocks
 };
 
 #endif
+>>>>>>> houseKeeping

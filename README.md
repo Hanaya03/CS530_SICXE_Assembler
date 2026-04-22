@@ -31,6 +31,87 @@ This project is intended to support the following core requirements that are bas
 - support for key SIC/XE addressing and assembler features used in the provided test cases
 
 
+## Build Instructions
+
+### Environment
+
+This project is intended for a GNU/Linux environment using:
+
+- `g++`
+- `make`
+- standard C++ library headers (`iostream`, `fstream`, `sstream`, `vector`, `unordered_map`, `iomanip`, `algorithm`, etc.)
+
+### Build commands
+
+```bash
+make clean
+make
+```
+
+This should produce the executable:
+
+```bash
+./lxe
+```
+
+## Runtime Notes Before Executing
+
+The current uploaded source snapshot contains one important path assumption:
+
+- **`OpCode.cpp` currently opens `data/opcodes.txt`**
+- the uploaded opcode file is present as **`opcodes.txt` in the project root**
+
+To run the current source without changing code, create the expected folder/file path first:
+
+```bash
+mkdir -p data
+cp opcodes.txt data/opcodes.txt
+```
+
+If you prefer, you can instead update the file path in `OpCode.cpp` to match the location of `opcodes.txt` in your final submission layout.
+
+## How to Run
+
+The program accepts one or more `.sic` files as command-line arguments. please note, on windows you will have to
+specify the path of the executables such as "examples/test_file"
+
+### Single file
+
+```bash
+./lxe copy.sic
+```
+
+### Multiple files
+
+```bash
+./lxe copy.sic blocks.sic work.sic P2sample.sic
+```
+
+If no source file is supplied, `ixe.cpp` prints an error/usage message and terminates.
+
+## Input and Output Conventions
+
+### Input
+
+Input files are SIC/XE source files using the fixed-field style shown in the textbook-style examples included with the assignment. The uploaded test set includes examples with comments, literals, blocks, immediate operands, indirect operands, indexed operands, and extended-format instructions.
+
+### Output
+
+In the current uploaded code snapshot, Pass 2 writes generated files into an **`output/`** directory using the base name of the source file:
+
+- `output/<name>.l`
+- `output/<name>.st`
+
+The repository also includes checked-in root-level `.l` and `.st` files, which appear to be saved development/reference outputs.
+
+## Included Test Programs
+
+| Test File | Purpose / Features Exercised | Included Reference Artifacts |
+| --- | --- | --- |
+| `P2sample.sic` | Format 4 instructions, `BASE`, indexed addressing, literal use, large displacements | `P2sample.l`, `P2sample.st`, `P2.out` |
+| `blocks.sic` | `USE` program blocks, literals across blocks, extended instructions | `blocks.l`, `blocks.st`, `blocks.out` |
+| `work.sic` | COPY-style workload used during development, literals, block switching, I/O instructions | `work.l`, `work.st`, `work.out` |
+| `copy.sic` | COPY-style assembler test with literals, block use, expressions, and subroutine-style flow | `copy.l`, `copy.st`, `copy.out` |
 
 
 ### Features implemented in the uploaded code
@@ -168,87 +249,6 @@ The file **`Tentative Assembler Diagram.drawio`** serves as the design artifact 
 
 - `lxe` - prebuilt executable present in the uploaded snapshot
 - `a.out` - console/debug output artifact from development
-
-## Build Instructions
-
-### Environment
-
-This project is intended for a GNU/Linux environment using:
-
-- `g++`
-- `make`
-- standard C++ library headers (`iostream`, `fstream`, `sstream`, `vector`, `unordered_map`, `iomanip`, `algorithm`, etc.)
-
-### Build commands
-
-```bash
-make clean
-make
-```
-
-This should produce the executable:
-
-```bash
-./lxe
-```
-
-## Runtime Notes Before Executing
-
-The current uploaded source snapshot contains one important path assumption:
-
-- **`OpCode.cpp` currently opens `data/opcodes.txt`**
-- the uploaded opcode file is present as **`opcodes.txt` in the project root**
-
-To run the current source without changing code, create the expected folder/file path first:
-
-```bash
-mkdir -p data
-cp opcodes.txt data/opcodes.txt
-```
-
-If you prefer, you can instead update the file path in `OpCode.cpp` to match the location of `opcodes.txt` in your final submission layout.
-
-## How to Run
-
-The program accepts one or more `.sic` files as command-line arguments.
-
-### Single file
-
-```bash
-./lxe copy.sic
-```
-
-### Multiple files
-
-```bash
-./lxe copy.sic blocks.sic work.sic P2sample.sic
-```
-
-If no source file is supplied, `ixe.cpp` prints an error/usage message and terminates.
-
-## Input and Output Conventions
-
-### Input
-
-Input files are SIC/XE source files using the fixed-field style shown in the textbook-style examples included with the assignment. The uploaded test set includes examples with comments, literals, blocks, immediate operands, indirect operands, indexed operands, and extended-format instructions.
-
-### Output
-
-In the current uploaded code snapshot, Pass 2 writes generated files into an **`output/`** directory using the base name of the source file:
-
-- `output/<name>.l`
-- `output/<name>.st`
-
-The repository also includes checked-in root-level `.l` and `.st` files, which appear to be saved development/reference outputs.
-
-## Included Test Programs
-
-| Test File | Purpose / Features Exercised | Included Reference Artifacts |
-| --- | --- | --- |
-| `P2sample.sic` | Format 4 instructions, `BASE`, indexed addressing, literal use, large displacements | `P2sample.l`, `P2sample.st`, `P2.out` |
-| `blocks.sic` | `USE` program blocks, literals across blocks, extended instructions | `blocks.l`, `blocks.st`, `blocks.out` |
-| `work.sic` | COPY-style workload used during development, literals, block switching, I/O instructions | `work.l`, `work.st`, `work.out` |
-| `copy.sic` | COPY-style assembler test with literals, block use, expressions, and subroutine-style flow | `copy.l`, `copy.st`, `copy.out` |
 
 ### Debug/trace artifacts
 
